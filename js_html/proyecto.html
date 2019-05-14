@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Diagramas de flujo</title>
+	<style type="text/css">
+		@import"C:/Users/Erik/Documents/GitHub/TPW_Proyecto/css/botones.css"
+	</style>
+	<meta charset="UTF-8">
+</head>
+<body>
+	<div id="opciones" class ="barraBotones">
+		<p>Acciones</p>
+		<div class="boton"><span class="tipTexto">Accion:<br>Pone el inicio o final del diagrama.</span><button class="botonAccion"><img src="C:/Users/Erik/Documents/GitHub/TPW_Proyecto/imagenes/inicio_final.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Declara una variable.</span><button class="botonAccion"><img src="C:/Users/Erik/Documents/GitHub/TPW_Proyecto/imagenes/decVariable.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Pone entrada de datos.</span><button class="botonAccion"><img src="C:/Users/Erik/Documents/GitHub/TPW_Proyecto/imagenes/entDatos.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Pone salida de datos.</span><button class="botonAccion"><img src="C:/Users/Erik/Documents/GitHub/TPW_Proyecto/imagenes/salDatos.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Pone una condicional.</span><button class="botonAccion"><img src="C:/Users/Erik/Documents/GitHub/TPW_Proyecto/imagenes/condicional.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Cambia Color de borde</span><button class="botonAccion"><img src="C:/Users/Erik/Documents/GitHub/TPW_Proyecto/imagenes/cambioColor.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Cambia Color de relleno</span><button class="botonAccion"><img src="C:/Users/Erik/Documents/GitHub/TPW_Proyecto/imagenes/cambioRelleno.png"></button></div>
+	</div>
+	<div id="canvasDiagrama" class ="divDiagrama">
+		<canvas id="diaCanvas" width="1920px" height="800px" style="border:5px solid #000000; width: 100%; height: 80%"></canvas>
+	</div>
+	<div id="codigoDiagrama" class ="divCodigo">
+		<canvas id="diaCanvas" width="1920px" height="300px" style="border:5px solid #000000; width: 100%; height: 20%"></canvas>
+	</div>
+</body>
+</html>
