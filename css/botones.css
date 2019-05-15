@@ -1,0 +1,76 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+} 
+.barraBotones{
+	position: relative;
+	float: left;
+	height: 730px;
+	width: 7%;
+	background-color: red;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.botonAccion{
+	position: relative;
+	padding: 0;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	background-color: lime;
+	border-color: lime;
+}
+
+.boton .tipTexto{
+  	visibility: hidden;
+  	width: 95px;
+  	background-color: black;
+  	color: #fff;
+  	text-align: center;
+  	border-radius: 6px;
+  	padding: 5px;
+  	position: absolute;
+  	z-index: 1;
+  	left: 0%;
+  	top: 45%;
+}
+
+.boton:hover .tipTexto{
+  	visibility: visible;
+}
+
+.botonAccion:hover{
+	background-color: lightblue;
+	border-color: lightblue;
+}
+
+.botonAccion:active{
+	position: relative;
+	left: 10%;
+	background-color: rgba(0,0,0,0.5);
+	border-color: rgba(0,0,0,0.5);
+}
+
+.botonAccion>img:active{
+	opacity: 0.5;
+}
+
+.divDiagrama{
+	position: relative;
+	display: flex;
+	float: left;
+	height: 80%;
+	width: 93%;
+	background-color: pink;
+}
+
+.divCodigo{
+	position: relative;
+	display: flex;
+	float: left;
+	height: 20%;
+	width: 93%;
+	background-color: orange;
+}
