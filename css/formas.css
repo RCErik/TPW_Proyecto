@@ -1,0 +1,85 @@
+.oval {
+  height: 80px;
+  width: 150px;
+  margin: 0 auto;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #40a977;
+  border-radius: 50%;
+  border: 2px dashed #f69c55;
+}
+
+.rectangle {
+  height: 80px;
+  width: 150px;
+  background-color: #40a977;
+  margin: 0 auto;
+  text-align: center;
+  vertical-align: middle;
+  border: 2px dashed #f69c55;
+}
+
+.rectangle2 {
+  height: 60px;
+  width: 146px;
+  margin-top: 10px;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #123456;
+}
+
+.circle {
+    width: 250px;
+    height: 250px;
+    background-color: #40a977;
+    border-radius: 50%;
+    float: left;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+    border: 2px dashed #f69c55;
+}
+
+.polygon {
+  shape-outside: polygon(0 30px, 0 90px, 150px 90px, 150px 0px, 30px 0px);
+  clip-path: polygon(0 30px, 0 90px, 150px 90px, 150px 0px, 30px 0px);
+  height: 90px;
+  width: 150px;
+  margin: 0 auto;
+  background: #40a977;
+  text-align: center;
+  vertical-align: middle;
+  border: 2px dashed #f69c55;
+}
+
+.diamante {
+    width: 80px;
+    height: 80px;
+    background: #40a977;
+    margin: 0 auto;
+/* Rotacion */
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+/* Rotacion */
+    -webkit-transform-origin: 0 100%;
+    -moz-transform-origin: 0 100%;
+    -ms-transform-origin: 0 100%;
+    -o-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+}
+
+.texto {
+  height: 80px;
+  line-height: 80px;
+  text-align: center;
+  vertical-align: middle;
+}
+.texto span {
+  color: white;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+}
