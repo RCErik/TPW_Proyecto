@@ -8,20 +8,27 @@
 	<script type="text/javascript" src="js_html/operacionesCanvas.js"></script>
 	<meta charset="UTF-8">
 </head>
-<body>
+<body onLoad="init()">
+	
+	<div id="canvasDiagrama" class ="divDiagrama">
+		<canvas id="diaCanvas" width="1200" height="800" style="border: 1px solid #000;">
+	    </canvas>
+	</div>
 	<div id="opciones" class ="barraBotones">
 		<p>Acciones</p>
-		<div class="boton"><span class="tipTexto">Accion:<br>Pone el inicio o final del diagrama.</span><button class="botonAccion" onclick="dibujarOvalo('Inicio')"><img src="imagenes/inicio_final.png"></button></div>
-		<div class="boton"><span class="tipTexto">Accion:<br>Declara una variable.</span><button class="botonAccion" onclick="dibujarVar('Cadena')"><img src="imagenes/decVariable.png"></button></div>
-		<div class="boton"><span class="tipTexto">Accion:<br>Pone entrada de datos.</span><button class="botonAccion" onclick="dibujarEntradaDatos()"><img src="imagenes/entDatos.png"></button></div>
-		<div class="boton"><span class="tipTexto">Accion:<br>Pone salida de datos.</span><button class="botonAccion" onclick="dibujarPoligono('Biebnvenidos aldkasnd das')"><img src="imagenes/salDatos.png"></button></div>
-		<div class="boton"><span class="tipTexto">Accion:<br>Pone una condicional.</span><button class="botonAccion" onclick="dibujarCondicional('cambio')"><img src="imagenes/condicional.png"></button></div>
-		<div class="boton"><span class="tipTexto">Accion:<br>Cambia Color de borde</span><button class="botonAccion"><img src="imagenes/cambioColor.png"></button></div>
-		<div class="boton"><span class="tipTexto">Accion:<br>Cambia Color de relleno</span><button class="botonAccion"><img src="imagenes/cambioRelleno.png"></button></div>
-		<div class="boton"><span class="tipTexto">Accion:<br>Elimina un elemento del diagrama</span><button class="botonAccion"><img src="imagenes/borrar.png"></button></div>
-	</div>
-	<div id="canvasDiagrama" class ="divDiagrama">
-		<!--<canvas id="diaCanvas" width="1920px" height="800px" style="border:5px solid #000000; width: 100%; height: 80%"></canvas>-->
+		<div class="boton"><span class="tipTexto">Accion:<br>Pone el inicio del diagrama.</span><button class="botonAccion" onclick="Dibujar('iniciar')"><img src="imagenes/inicio.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Pone el fin del diagrama.</span><button class="botonAccion" onclick="Dibujar('final')"><img src="imagenes/final.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Declara una variable.</span><button class="botonAccion" onclick="Dibujar('Variable')"><img src="imagenes/decVariable.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Pone una asignacion.</span><button class="botonAccion" onclick="Dibujar('Asignacion')"><img src="imagenes/asignacion.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Pone entrada de datos.</span><button class="botonAccion" onclick="Dibujar('EntDatos')"><img src="imagenes/entDatos.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Pone salida de datos.</span><button class="botonAccion" onclick="Dibujar('SalDatos')"><img src="imagenes/salDatos.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Pone una condicional.</span><button class="botonAccion" onclick="Dibujar('Condicional')"><img src="imagenes/condicional.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Indica el cambio de color</span><input type="color" id="cambioColor" value="#ff0000"></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Cambia Color de borde</span><button class="botonAccion" onclick="CambiarColor()"><img src="imagenes/cambioColor.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Cambia Color de relleno</span><button class="botonAccion" onclick="CambiarRelleno()"><img src="imagenes/cambioRelleno.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Elimina un elemento del diagrama</span><button class="botonAccion" onclick="BorrarFigura()"><img src="imagenes/borrar.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Cambia el texto de una figura</span><button class="botonAccion" onclick="CambiarTexto()"><img src="imagenes/letrasTexto.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Cambia el tamaño de fuente del lienzo</span><button class="botonAccion" onclick="CambiarFuenteTam()"><img src="imagenes/tamLetra.png"></button></div>
 	</div>
 	<div id="codigoDiagrama" class ="divCodigo">
 		<canvas id="codCanvas" width="1920px" height="300px" style="border:5px solid #000000; width: 100%; height: 20%"></canvas>

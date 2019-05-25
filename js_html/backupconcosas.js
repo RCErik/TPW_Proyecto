@@ -59,9 +59,35 @@ function init() {
   altura = canvas.height; //Obtenemos su alto
   ancho = canvas.width;   //Y su ancho
   contexto = canvas.getContext("2d");  //Obtenemos las propiedades del canvas para usarlo
+  
+  //canvas.addEventListener("mousedown", Arrastrar);
   canvas.addEventListener("mouseup", Dejar);
   canvas.addEventListener("click", Selecionar);
   canvas.addEventListener("mousedown", obtenerCoordenadas); //Añadimos un listener para cuando seleccionemos algo para mover
+  
+  /*for(var t=0;t<3;t++){
+    figs.push(new figurasCanvas("cuadrado",-1,-1,-1,-1,-1,-1,-1,-1, "jajas"));
+  }
+
+  var coords = ": " + figs[0].nombre + ", " + figs[0].izq;
+  document.getElementById("demo").innerHTML = coords
+  figurasX.push(200);
+  figurasX.push(350);
+  figurasX.push(25);
+  figurasY.push(200);
+  figurasY.push(250);
+  figurasY.push(90);
+  figurasW.push(40);
+  figurasW.push(40);
+  figurasW.push(25);
+  figurasH.push(40);
+  figurasH.push(40);
+  figurasH.push(25);
+  contexto.strokeRect(200,200,40,40);
+  contexto.strokeRect(350,250,40,40);
+  contexto.strokeRect(25,90,25,25);
+  contexto.strokeRect(0,0,10,10);
+  triag();*/
 }
 
 /*Funcion que toma las coordenadas del objeto seleccionado y pone nuevas
@@ -133,6 +159,24 @@ function Selecionar(event){
     mySel2 = -1;
     mySelCuadro2 = -1;
   }
+
+  /*if(esSeleccionado){
+    var coordsxD = "nom: " + figs[mySel].nombre + " izq, " 
+    + figs[mySel].izq+ " der, " 
+    + figs[mySel].der+ " arr, " 
+    + figs[mySel].arriba+ " aba, " + figs[mySel].abajo
+    + " Sel1 " + esSeleccionado
+    + " sel2 " + esSeleccionado2
+    + " mysel1 " + mySel
+    + " mysel2 " + mySel2
+    + " cuadrito1 "+ mySelCuadro
+    + " cuadrito2 "+ mySelCuadro2;
+    document.getElementById("demo").innerHTML = coordsxD;
+  }
+  else if(esSeleccionado2){
+    var coordslol = "es de verdad pepega "
+    document.getElementById("demo2").innerHTML = coordslol;
+  }*/
   
   //Ahora redibujamos todo para hacer las cosas si es que se selecciono alguna figura
   if(esSeleccionado||esSeleccionado2){
@@ -175,6 +219,8 @@ function Selecionar(event){
     //Si es un cuadro de redimension lo indicamos (las esquinas del cuadro)
     if(mySelCuadro == 0 || mySelCuadro == 2 || mySelCuadro == 5 || mySelCuadro == 7){
       esRedimensionar = true;
+      var coords = "X coords: " + mx + ", Y coords: " + my+" red "+esRedimensionar;
+      document.getElementById("demo").innerHTML = coords;
     }
     else if(mySelCuadro == 1 || mySelCuadro == 3 || mySelCuadro == 4 || mySelCuadro == 6){
       //Si es un cuadro de conexion lo indicamos (los puntos medios de las aristas)
@@ -187,11 +233,38 @@ function Selecionar(event){
         coorCuadritoAntesX = cuadrosSelectX[mySelCuadro];
         coorCuadritoAntesY = cuadrosSelectY[mySelCuadro];
       }
+      var coords = "X coords: " + mx + ", Y coords: " + my+" con "+esConectar+" cuadrito "+mySelCuadro
+      +" x cuadrito "+cuadrosSelectX[mySelCuadro]+" y cuadrito "+cuadrosSelectY[mySelCuadro]
+      + " Sel1 " + esSeleccionado
+    + " sel2 " + esSeleccionado2
+    + " mysel1 " + mySel
+    + " mysel2 " + mySel2
+    + " cuadrito1 "+ mySelCuadro
+    + " cuadrito2 "+ mySelCuadro2;
+      document.getElementById("demo").innerHTML = coords;
     }
     else{
       //Si no selecciono ningun nodo lo indicamos
       esRedimensionar = false;
       esConectar = false;
+      //esSeleccionado = false;
+
+      var coords = "Falso ambos "+"nom: " 
+    + figs[mySel].nombre + " izq, " 
+    + figs[mySel].izq+ " der, " 
+    + figs[mySel].der+ " arr, " 
+    + figs[mySel].arriba+ " aba, " 
+    + figs[mySel].abajo+ " Refizq, " 
+    + figs[mySel].izqRef+ " Refder, " 
+    + figs[mySel].derRef+ " Refarr, " 
+    + figs[mySel].arribaRef+ " Refaba, " + figs[mySel].abajoRef
+      + " Sel1 " + esSeleccionado
+    + " sel2 " + esSeleccionado2
+    + " mysel1 " + mySel
+    + " mysel2 " + mySel2
+    + " cuadrito1 "+ mySelCuadro
+    + " cuadrito2 "+ mySelCuadro2;
+      document.getElementById("demo").innerHTML = coords;
     }
     //Si hace doble click pasamos a Arrastar
     canvas.ondblclick = Arrastrar;
@@ -224,6 +297,17 @@ function CrearFlecha(event){
     contexto.stroke();                //Dibujamos la linea
     ultimaX = mx;                     //Ponemos ahora la nueva ultima coordenada de X
     ultimaY = my;                     //Y la coordenada de Y
+    var coordsxD = "nom: " + figs[mySel].nombre + " izq, " 
+  + figs[mySel].izq+ " der, " 
+  + figs[mySel].der+ " arr, " 
+  + figs[mySel].arriba+ " aba, " + figs[mySel].abajo
+  + " Sel1 " + esSeleccionado
+  + " sel2 " + esSeleccionado2
+  + " mysel1 " + mySel
+  + " mysel2 " + mySel2
+  + " cuadrito1 "+ mySelCuadro
+  + " cuadrito2 "+ mySelCuadro2;
+  document.getElementById("demo").innerHTML = coordsxD;
   }
   else if(esSeleccionado2){
     //Si es la segunda seleccion ponemos las caracteristicas de la linea
@@ -446,6 +530,8 @@ function obtenerCoordenadas(event){
       esArrastrado = true;  //Inidicamos que fue seleccionada
       offsetx = mx-figurasX[i];
       offsety = my-figurasY[i];
+      /*var jaja = "Hola " + mySel +" "+esSeleccionado;
+      document.getElementById("demo").innerHTML = jaja;*/
       if(event.button == 0){
         canvas.onmousemove = Mover; //Llamamos a la funcion mover
       }
@@ -488,6 +574,14 @@ function Dejar(){
   contexto.lineWidth = 1;
   contexto.clearRect(0, 0, canvas.width, canvas.height);  //Limpiamos el canvas
   var l = figs.length; //Obtenemos la cantidad de objetos que hay en el canvas
+  //Verificamos en la cola cual es el que estamos moviendo
+  /*for(var aux = l-1; aux >= 0; aux--){
+    contexto.strokeRect(figurasX[aux],figurasY[aux],figurasW[aux],figurasH[aux]);
+  }*/
+  //triag();
+  /*if(!esSeleccionado&&!esSeleccionado2){
+    canvas.ondblclick=dibujarConexiones();
+  }*/
   esNuevo = false;
   Dibujar("iniciar");
   Dibujar("final");
@@ -499,6 +593,123 @@ function Dejar(){
   esNuevo = true;
 }
 
+function triag(){
+  contexto.beginPath();
+  contexto.moveTo(figurasX[2],figurasY[2]);
+  contexto.lineTo(figurasX[2],figurasY[2]+figurasH[2]);
+  contexto.lineTo(figurasX[2]+figurasW[2],figurasY[2]);
+  contexto.closePath();
+  contexto.fill();
+}
+
+/*Funcion que redibuja las lineas entre los nodos cuando se 
+mueven o se borra el canvas*/
+function dibujarConexiones(){
+  var nod = 0;
+  var l = figs.length; //Obtenemos la cantidad de objetos que hay en el canvas
+  var aux = l-1;
+  //Verificamos en la cola cuales tienen conexion
+  for(aux = l-1; aux >= 0; aux--){
+    if(figs[aux].arriba != -1){
+      mySel = aux;
+      mySel2 = mySel;
+      CoodenadasRedimSelect;
+      if(figs[aux].arribaRef != -1){
+        coorCuadritoAntesX = cuadrosSelectX[1];
+        coorCuadritoAntesY = cuadrosSelectY[1];
+        mySel = figs[aux].arriba;
+        CoodenadasRedimSelect;
+        var coordslol = "mySel1 "+mySel+" mySel2 "+mySel2+" en conexiones cuadX1 "
+        +coorCuadritoAntesX+" cuadY1 "+coorCuadritoAntesY;
+        document.getElementById("demo2").innerHTML = coordslol;
+        switch(figs[aux].arribaRef){
+          case 1:
+            dibujarFlecha("abajo");
+            break;
+          case 3:
+            dibujarFlecha("izquierda");
+            break;
+          case 4:
+            dibujarFlecha("derecha");
+            break;
+          case 6:
+            dibujarFlecha("arriba");
+            break;
+          default:
+            break;
+        }
+      }
+      if(figs[aux].derRef != -1){
+        
+      }
+      if(figs[aux].abajoRef != -1){
+        
+      }
+      if(figs[aux].izqaRef != -1){
+        
+      }
+
+    }
+    if(figs[aux].der != -1){
+      if(figs[aux].arribaRef != -1){
+
+      }
+      if(figs[aux].derRef != -1){
+        
+      }
+      if(figs[aux].abajoRef != -1){
+        
+      }
+      if(figs[aux].izqaRef != -1){
+        
+      }
+      
+    }
+    if(figs[aux].abajo != -1){
+      if(figs[aux].arribaRef != -1){
+
+      }
+      if(figs[aux].derRef != -1){
+        
+      }
+      if(figs[aux].abajoRef != -1){
+        
+      }
+      if(figs[aux].izqaRef != -1){
+        
+      }
+      
+    }
+    if(figs[aux].izq != -1){
+      if(figs[aux].arribaRef != -1){
+
+      }
+      if(figs[aux].derRef != -1){
+        
+      }
+      if(figs[aux].abajoRef != -1){
+        
+      }
+      if(figs[aux].izqaRef != -1){
+        
+      }
+      
+    }
+  }
+}
+
+/*var coordsxD = "nom: " + figs[l-1].nombre + " izq, " 
+        + figs[l-1].izq+ " der, " 
+        + figs[l-1].der+ " arr, " 
+        + figs[l-1].arriba+ " aba, " + figs[l-1].abajo
+        + " x " + figurasX[l-1]
+        + " y " + figurasY[l-1]
+        + " w " + figurasW[l-1]
+        + " h " + figurasH[l-1]
+        + " cuadrito1 "+ mySelCuadro
+        + " cuadrito2 "+ mySelCuadro2;
+        document.getElementById("demo2").innerHTML = coordsxD;*/
+
 /*Funcion para redibujar el canvas y pueda mover el objeto a donde queremos, 
 solo lo hace si la variable que permite el refrescado del canvas esta activa */
 function Dibujar(tipo){
@@ -507,7 +718,6 @@ function Dibujar(tipo){
   contexto.font = ""+tamañoFuente+"px Arial";
   switch(tipo){
     case "iniciar":
-    //Parte para la figura de inicio
       if(esNuevo){
         figs.push(new figurasCanvas("inicio",-1,-1,-1,-1,-1,-1,-1,-1, "Inicio"));
         figurasX.push(0);
@@ -541,7 +751,6 @@ function Dibujar(tipo){
       
       break;
     case "final":
-    //Parte para la figura de fin
       if(esNuevo){
         figs.push(new figurasCanvas("final",-1,-1,-1,-1,-1,-1,-1,-1, "Fin"));
         figurasX.push(0);
@@ -575,7 +784,6 @@ function Dibujar(tipo){
 
       break;
     case "EntDatos":
-    //Parte para la figura de entrada de datos
       if(esNuevo){
         var Datos = prompt("Introduce el texto", "Entrada de datos");
         figs.push(new figurasCanvas("EntDatos",-1,-1,-1,-1,-1,-1,-1,-1, ""+Datos));
@@ -628,7 +836,6 @@ function Dibujar(tipo){
 
       break;
     case "SalDatos":
-    //Parte para la figura de salida de datos
       if(esNuevo){
         var Datos = prompt("Introduce el texto", "Salida de datos");
         figs.push(new figurasCanvas("SalDatos",-1,-1,-1,-1,-1,-1,-1,-1, ""+Datos));
@@ -673,7 +880,6 @@ function Dibujar(tipo){
 
       break;
     case "Condicional":
-    //Parte para la figura de condicion
       if(esNuevo){
         var Datos = prompt("Introduce el texto", "Condicional");
         figs.push(new figurasCanvas("Condicional",-1,-1,-1,-1,-1,-1,-1,-1,""+Datos));
@@ -716,7 +922,6 @@ function Dibujar(tipo){
 
       break;
     case "Variable":
-    //Parte para la figura de variables
       if(esNuevo){
         var Datos = prompt("Introduce el texto", "Variable");
         figs.push(new figurasCanvas("Variable",-1,-1,-1,-1,-1,-1,-1,-1, ""+Datos));
@@ -756,7 +961,6 @@ function Dibujar(tipo){
       }
       break;
     case "Asignacion":
-    //Parte para la figura de asignacion
       if(esNuevo){
         var Datos = prompt("Introduce el texto", "Asignacion");
         figs.push(new figurasCanvas("Asignacion",-1,-1,-1,-1,-1,-1,-1,-1, ""+Datos));
@@ -792,61 +996,45 @@ function Dibujar(tipo){
   }
 }
 
-/*Funcion que pone el texto dentro de la figura que manda a llamar
-esta funcion, tambien ajusta el texto dentro de los limites de la 
-figura.*/
 function PonerTexto(tipo,aux){
-  var largo;  //Variable para saber el largo del texto en px
+  var largo;
   switch(tipo){
     case "iniciar":
-      contexto.textAlign = "left";
-    //Para la figura iniciar no es necesario verificacion y se pone el texto
       contexto.fillText(""+figs[aux].texto, figurasX[aux]+figurasW[aux]*0.30,figurasY[aux]+figurasH[aux]*0.30+tamañoFuente);
       break;
     case "final":
-      contexto.textAlign = "left";
-    //Para la figura fin no es necesario verificacion y se pone el texto
       contexto.fillText(""+figs[aux].texto, figurasX[aux]+figurasW[aux]*0.37,figurasY[aux]+figurasH[aux]*0.30+tamañoFuente);
       break;
     case "EntDatos":
-      contexto.textAlign = "left";  //Ponemos el texto a la izquieda
-      largo = contexto.measureText(figs[aux].texto).width;  //Obtenemos el largo del texto
+      contexto.textAlign = "left";
+      largo = contexto.measureText(figs[aux].texto).width;
       if(largo<figurasW[aux]){
-        //Si el largo cabe en la figura lo ponemos
         contexto.fillText(""+figs[aux].texto,figurasX[aux]+figurasW[aux]*0.07,figurasY[aux]+figurasH[aux]*0.07+tamañoFuente);
       }
       else{
-        //En caso de que no, vamos a recortarlo para meterlo
-        var seguro = false; //Variable para verificar el ciclo
-        var cadena = figs[aux].texto.split(" ");  //Dividimos el texto por espacios
-        var cadPart = ""; //Variable para formar la cadena nueva
-        var cadAnt = "";  //Variable para respaldar la cadena valida
-        var cont = 0; //Contador para movernos en las palabras
-        var enter = 0;  //Variable para simular el espacio en Y del Enter
-        //Mientras no lleguemos a la ultima palabra
+        var seguro = false;
+        var cadena = figs[aux].texto.split(" ");
+        var cadPart = "";
+        var cadAnt = "";
+        var cont = 0;
+        var enter = 0;
         while(!seguro){
-          cadPart = cadAnt+cadena[cont]+" ";  //Ponemos una palabra en la cadena
-          //La medimos y la comparamos con el largo de la figura
+          cadPart = cadAnt+cadena[cont]+" ";
           if(contexto.measureText(cadPart).width<figurasW[aux]){
-            //Si es valida respaldamos la cadena
             cadAnt = cadPart;
-            cont++; //Pasamos a la siguiente palabra
-            //Si llegamos a la ultima y es valida
+            cont++;
             if(cont>=cadena.length){
-              //Ponemos la cadena en la figura
               contexto.fillText(cadAnt,figurasX[aux]+figurasW[aux]*0.07,figurasY[aux]+figurasH[aux]*0.07+tamañoFuente+enter);
-              seguro = true;  //Salimos del ciclo
+              seguro = true;
             }
           }
           else{
-            //Si no es valida porque rebasamos, ponemos la cadena de respaldo en la figura 
             contexto.fillText(cadAnt,figurasX[aux]+figurasW[aux]*0.07,figurasY[aux]+figurasH[aux]*0.07+tamañoFuente+enter);
-            cadPart = ""; //Limpiamos la cadena
-            cadAnt = "";  //Limpiamos el respaldo
-            enter += tamañoFuente;  //Bajamos en Y con el tamaño de la fuente
+            cadPart = "";
+            cadAnt = "";
+            enter += tamañoFuente;
           }
         }
-        //Se repite este algoritmo pero con coordenadas diferentes por la figura
       }
       break;
     case "SalDatos":
@@ -984,7 +1172,6 @@ function PonerTexto(tipo,aux){
   }
 }
 
-/*Funcion que cambia el color del contorno de la figura seleccionada*/
 function CambiarColor(){
   if(esSeleccionado){
     var figColor = document.getElementById("cambioColor").value;
@@ -992,7 +1179,6 @@ function CambiarColor(){
   }
 }
 
-/*Funcion que cambia el color del relleno de la figura seleccionada*/
 function CambiarRelleno(){
   if(esSeleccionado){
     var figColor = document.getElementById("cambioColor").value;
@@ -1000,7 +1186,6 @@ function CambiarRelleno(){
   }
 }
 
-/*Funcion que borra la figura seleccionada*/
 function BorrarFigura(){
   if(esSeleccionado){
     figs[mySel].nombre = "Borrado";
@@ -1011,7 +1196,6 @@ function BorrarFigura(){
   }
 }
 
-/*Funcion que cambia el texto de la figura seleccionada*/
 function CambiarTexto(){
   if(esSeleccionado){
     var Datos = prompt("Cambia el texto", "Texto nuevo");
@@ -1019,7 +1203,6 @@ function CambiarTexto(){
   }
 }
 
-/*Funcion que cambia el tamaño de la fuente del canvas*/
 function CambiarFuenteTam(){
   var Datos = prompt("Cambia el tamaño de la fuente", "0");
   tamañoFuente = parseInt(Datos);
