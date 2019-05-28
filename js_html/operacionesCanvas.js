@@ -2503,12 +2503,15 @@ function traducirCodigo() {
   var indice;
   var instruccion;
   var instruccionesCondicionales = new Array();
-  var codigo = new Array();
+  var codigo  = new Array();
   //Revisamos el flujo del diagrama comenzando por el primer elemento del diagrama
   //Buscamos el elemento que tengo nombre de inicio
   for (i = 0; i < figs.length ; i++)
-    if (figs[i].nombre == "inicio")
+    if (figs[i].nombre == "inicio"){
       figuraActual = figs[i];
+      instruccion = "void main(){";
+      codigo.push(instruccion);
+    }
   //Para la traduccion de codigo lo repetimos hasta que lleguemos al elemento final del diagrama
   while (figuraActual.nombre != "final") {
     //Obtenemos la linea de codigo correspondiente al elemento
@@ -2544,6 +2547,9 @@ function traducirCodigo() {
     indice = figuraActual.abajo;
     //Avanzamos dentro de la coleccion de figuras al elemento en el indice indicado
     figuraActual = figs[indice];
+  } if (figuraActual.nombre == "final") {
+    instruccion = "}";
+    codigo.push(instruccion);
   }
   textArea = document.getElementById("codCanvas");
   textArea.value = codigo.join("\n");
