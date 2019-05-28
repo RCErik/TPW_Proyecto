@@ -9,9 +9,8 @@
 	<meta charset="UTF-8">
 </head>
 <body onLoad="init()">
-	
 	<div id="canvasDiagrama" class ="divDiagrama">
-		<canvas id="diaCanvas" width="1200" height="800" style="border: 1px solid #000;">
+		<canvas id="diaCanvas" width="1150" height="800" style="border: 1px solid #000;">
 	    </canvas>
 	</div>
 	<div id="opciones" class ="barraBotones">
@@ -29,9 +28,12 @@
 		<div class="boton"><span class="tipTexto">Accion:<br>Elimina un elemento del diagrama</span><button class="botonAccion" onclick="BorrarFigura()"><img src="imagenes/borrar.png"></button></div>
 		<div class="boton"><span class="tipTexto">Accion:<br>Cambia el texto de una figura</span><button class="botonAccion" onclick="CambiarTexto()"><img src="imagenes/letrasTexto.png"></button></div>
 		<div class="boton"><span class="tipTexto">Accion:<br>Cambia el tamaño de fuente del lienzo</span><button class="botonAccion" onclick="CambiarFuenteTam()"><img src="imagenes/tamLetra.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Conecta las figuras despues de marcar su referencia</span><button class="botonAccion" onclick="dibujarConexiones()"><img src="imagenes/conectar.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Desconecta la figuras de las demas</span><button class="botonAccion" onclick="desconectarFigura()"><img src="imagenes/desconectar.png"></button></div>
+		<div class="boton"><span class="tipTexto">Accion:<br>Obtiene el codigo del diagrama</span><button class="botonAccion" onclick="traducirCodigo()"><img src="imagenes/generarCodigo.png"></button></div>
 	</div>
 	<div id="codigoDiagrama" class ="divCodigo">
-		<canvas id="codCanvas" width="1920px" height="300px" style="border:5px solid #000000; width: 100%; height: 20%"></canvas>
+		<textarea id="codCanvas" rows="15" cols="100" style="border:5px solid #000000; width: 100%; height: 20%"> </textarea>
 	</div>
 </body>
 </html>

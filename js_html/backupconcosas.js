@@ -16,7 +16,7 @@ var SelectColor ="#00CC00";
 var SelectWidth = 2;
 //Variables para las cajas de redimiensionado y conexion de nodos
 var SelectBoxColor = 'darkred';
-var SelectBoxSize = 6;
+var SelectBoxSize = 8;
 var mitad = SelectBoxSize/2;
 var figurasX = [];        //Variable para las coordenadas X de las figuras
 var figurasY = [];        //Variable para las coordenadas Y de las figuras
@@ -29,6 +29,12 @@ var ultimaX, ultimaY;     //Variables para saber la ultima posicion del mouse mi
 var coorCuadritoAntesX, coorCuadritoAntesY; //Variables para saber la ultima posicion del nodo del primer objeto
 var esNuevo = true;
 var tamañoFuente = 16;
+var cuadrosX1 = [];
+var cuadrosY1 = [];
+var cuadrosX2 = [];
+var cuadrosY2 = [];
+var esSegundo = false;
+var conectado = false;
 
 //Clase para representar los cuadros de manera funcional
 class figurasCanvas{
@@ -59,35 +65,9 @@ function init() {
   altura = canvas.height; //Obtenemos su alto
   ancho = canvas.width;   //Y su ancho
   contexto = canvas.getContext("2d");  //Obtenemos las propiedades del canvas para usarlo
-  
-  //canvas.addEventListener("mousedown", Arrastrar);
-  canvas.addEventListener("mouseup", Dejar);
   canvas.addEventListener("click", Selecionar);
+  canvas.addEventListener("mouseup", Dejar);
   canvas.addEventListener("mousedown", obtenerCoordenadas); //Añadimos un listener para cuando seleccionemos algo para mover
-  
-  /*for(var t=0;t<3;t++){
-    figs.push(new figurasCanvas("cuadrado",-1,-1,-1,-1,-1,-1,-1,-1, "jajas"));
-  }
-
-  var coords = ": " + figs[0].nombre + ", " + figs[0].izq;
-  document.getElementById("demo").innerHTML = coords
-  figurasX.push(200);
-  figurasX.push(350);
-  figurasX.push(25);
-  figurasY.push(200);
-  figurasY.push(250);
-  figurasY.push(90);
-  figurasW.push(40);
-  figurasW.push(40);
-  figurasW.push(25);
-  figurasH.push(40);
-  figurasH.push(40);
-  figurasH.push(25);
-  contexto.strokeRect(200,200,40,40);
-  contexto.strokeRect(350,250,40,40);
-  contexto.strokeRect(25,90,25,25);
-  contexto.strokeRect(0,0,10,10);
-  triag();*/
 }
 
 /*Funcion que toma las coordenadas del objeto seleccionado y pone nuevas
@@ -119,6 +99,66 @@ function CoodenadasRedimSelect(){
   
   cuadrosSelectX[7] = figurasX[mySel]+figurasW[mySel]-SelectBoxSize;
   cuadrosSelectY[7] = figurasY[mySel]+figurasH[mySel]-SelectBoxSize;
+}
+
+/*Funcion que toma las coordenadas del objeto seleccionado y pone nuevas
+coordenadas a los cuadros de seleccion*/
+function CoodenadasRedimSelectConexiones(){
+    // 0  1  2
+    // 3     4
+    // 5  6  7
+    if(!esSegundo){
+      cuadrosX1[0] = figurasX[mySel];
+      cuadrosY1[0] = figurasY[mySel];
+      
+      cuadrosX1[1] = figurasX[mySel]+figurasW[mySel]/2-mitad;
+      cuadrosY1[1] = figurasY[mySel];
+      
+      cuadrosX1[2] = figurasX[mySel]+figurasW[mySel]-SelectBoxSize;
+      cuadrosY1[2] = figurasY[mySel];
+      
+      cuadrosX1[3] = figurasX[mySel];
+      cuadrosY1[3] = figurasY[mySel]+figurasH[mySel]/2-mitad;
+      
+      cuadrosX1[4] = figurasX[mySel]+figurasW[mySel]-SelectBoxSize;
+      cuadrosY1[4] = figurasY[mySel]+figurasH[mySel]/2-mitad;
+      
+      cuadrosX1[5] = figurasX[mySel];
+      cuadrosY1[5] = figurasY[mySel]+figurasH[mySel]-SelectBoxSize;
+
+      cuadrosX1[6] = figurasX[mySel]+figurasW[mySel]/2-mitad;
+      cuadrosY1[6] = figurasY[mySel]+figurasH[mySel]-SelectBoxSize;
+      
+      cuadrosX1[7] = figurasX[mySel]+figurasW[mySel]-SelectBoxSize;
+      cuadrosY1[7] = figurasY[mySel]+figurasH[mySel]-SelectBoxSize;
+    }
+    else{
+      cuadrosSelectX[0] = figurasX[mySel];
+      cuadrosSelectY[0] = figurasY[mySel];
+      
+      cuadrosSelectX[1] = figurasX[mySel]+figurasW[mySel]/2-mitad;
+      cuadrosSelectY[1] = figurasY[mySel];
+      
+      cuadrosSelectX[2] = figurasX[mySel]+figurasW[mySel]-SelectBoxSize;
+      cuadrosSelectY[2] = figurasY[mySel];
+      
+      cuadrosSelectX[3] = figurasX[mySel];
+      cuadrosSelectY[3] = figurasY[mySel]+figurasH[mySel]/2-mitad;
+      
+      cuadrosSelectX[4] = figurasX[mySel]+figurasW[mySel]-SelectBoxSize;
+      cuadrosSelectY[4] = figurasY[mySel]+figurasH[mySel]/2-mitad;
+      
+      cuadrosSelectX[5] = figurasX[mySel];
+      cuadrosSelectY[5] = figurasY[mySel]+figurasH[mySel]-SelectBoxSize;
+
+      cuadrosSelectX[6] = figurasX[mySel]+figurasW[mySel]/2-mitad;
+      cuadrosSelectY[6] = figurasY[mySel]+figurasH[mySel]-SelectBoxSize;
+      
+      cuadrosSelectX[7] = figurasX[mySel]+figurasW[mySel]-SelectBoxSize;
+      cuadrosSelectY[7] = figurasY[mySel]+figurasH[mySel]-SelectBoxSize;
+      esSegundo = false;
+    }
+    
 }
 
 /*Funcion que sirve para seleccionar una figura y hacer operaciones con esta*/
@@ -159,24 +199,6 @@ function Selecionar(event){
     mySel2 = -1;
     mySelCuadro2 = -1;
   }
-
-  /*if(esSeleccionado){
-    var coordsxD = "nom: " + figs[mySel].nombre + " izq, " 
-    + figs[mySel].izq+ " der, " 
-    + figs[mySel].der+ " arr, " 
-    + figs[mySel].arriba+ " aba, " + figs[mySel].abajo
-    + " Sel1 " + esSeleccionado
-    + " sel2 " + esSeleccionado2
-    + " mysel1 " + mySel
-    + " mysel2 " + mySel2
-    + " cuadrito1 "+ mySelCuadro
-    + " cuadrito2 "+ mySelCuadro2;
-    document.getElementById("demo").innerHTML = coordsxD;
-  }
-  else if(esSeleccionado2){
-    var coordslol = "es de verdad pepega "
-    document.getElementById("demo2").innerHTML = coordslol;
-  }*/
   
   //Ahora redibujamos todo para hacer las cosas si es que se selecciono alguna figura
   if(esSeleccionado||esSeleccionado2){
@@ -219,8 +241,6 @@ function Selecionar(event){
     //Si es un cuadro de redimension lo indicamos (las esquinas del cuadro)
     if(mySelCuadro == 0 || mySelCuadro == 2 || mySelCuadro == 5 || mySelCuadro == 7){
       esRedimensionar = true;
-      var coords = "X coords: " + mx + ", Y coords: " + my+" red "+esRedimensionar;
-      document.getElementById("demo").innerHTML = coords;
     }
     else if(mySelCuadro == 1 || mySelCuadro == 3 || mySelCuadro == 4 || mySelCuadro == 6){
       //Si es un cuadro de conexion lo indicamos (los puntos medios de las aristas)
@@ -247,8 +267,6 @@ function Selecionar(event){
       //Si no selecciono ningun nodo lo indicamos
       esRedimensionar = false;
       esConectar = false;
-      //esSeleccionado = false;
-
       var coords = "Falso ambos "+"nom: " 
     + figs[mySel].nombre + " izq, " 
     + figs[mySel].izq+ " der, " 
@@ -276,7 +294,7 @@ function Arrastrar(event){
   if(esRedimensionar){
     canvas.onmousemove = Redimensionar;
   }
-  else if(esConectar||esSeleccionado2){
+  else if(esConectar){
     canvas.onmousemove = CrearFlecha;
   }
 }
@@ -297,17 +315,6 @@ function CrearFlecha(event){
     contexto.stroke();                //Dibujamos la linea
     ultimaX = mx;                     //Ponemos ahora la nueva ultima coordenada de X
     ultimaY = my;                     //Y la coordenada de Y
-    var coordsxD = "nom: " + figs[mySel].nombre + " izq, " 
-  + figs[mySel].izq+ " der, " 
-  + figs[mySel].der+ " arr, " 
-  + figs[mySel].arriba+ " aba, " + figs[mySel].abajo
-  + " Sel1 " + esSeleccionado
-  + " sel2 " + esSeleccionado2
-  + " mysel1 " + mySel
-  + " mysel2 " + mySel2
-  + " cuadrito1 "+ mySelCuadro
-  + " cuadrito2 "+ mySelCuadro2;
-  document.getElementById("demo").innerHTML = coordsxD;
   }
   else if(esSeleccionado2){
     //Si es la segunda seleccion ponemos las caracteristicas de la linea
@@ -316,59 +323,34 @@ function CrearFlecha(event){
     contexto.lineJoin = "round";
 
     //Ahora guardamos la referencia entre las conexiones, primero del segundo objeto seleccionado
-    switch (mySelCuadro) {
-      case 1:
-      //Si es el nodo de arriba
-        figs[mySel].arriba = mySel2;  //A la figura ponemos a que objeto se conecta
-        figs[mySel].arribaRef = mySelCuadro2; //Y que nodo es
-        //Dibujamos la flecha
-        dibujarFlecha("abajo");
-        break;
-      case 4:
-      //Si es el nodo de la derecha
-        figs[mySel].der = mySel2; //A la figura ponemos a que objeto se conecta
-        figs[mySel].derRef = mySelCuadro2;  //Y que nodo es
-        //Dibujamos la flecha
-        dibujarFlecha("izquierda");
-        break;
-      case 6:
-      //Si es el nodo de abajo
-        figs[mySel].abajo = mySel2; //A la figura ponemos a que objeto se conecta
-        figs[mySel].abajoRef = mySelCuadro2;  //Y que nodo es
-        //Dibujamos la flecha
-        dibujarFlecha("arriba");
-        break;
-      case 3:
-      //Si es el nodo de la izquierda
-        figs[mySel].izq = mySel2; //A la figura ponemos a que objeto se conecta
-        figs[mySel].izqRef = mySelCuadro2;  //Y que nodo es
-        //Dibujamos la flecha
-        dibujarFlecha("derecha");
-        break;
-      default:
-        break;
-    }
-    //Ahora del primero
     switch (mySelCuadro2) {
       case 1:
       //Si es el nodo de arriba
         figs[mySel2].arriba = mySel;  //A la figura ponemos a que objeto se conecta
         figs[mySel2].arribaRef = mySelCuadro; //Y que nodo es
+        dibujarFlecha("abajo");
+        conectado = true;
         break;
       case 4:
       //Si es el nodo de la derecha
         figs[mySel2].der = mySel; //A la figura ponemos a que objeto se conecta
         figs[mySel2].derRef = mySelCuadro;  //Y que nodo es
+        dibujarFlecha("izquierda");
+        conectado = true;
         break;
       case 6:
       //Si es el nodo de abajo
         figs[mySel2].abajo = mySel; //A la figura ponemos a que objeto se conecta
         figs[mySel2].abajoRef = mySelCuadro;  //Y que nodo es
+        dibujarFlecha("arriba");
+        conectado = true;
         break;
       case 3:
       //Si es el nodo de la izquierda
         figs[mySel2].izq = mySel; //A la figura ponemos a que objeto se conecta
         figs[mySel2].izqRef = mySelCuadro;  //Y que nodo es
+        dibujarFlecha("derecha");
+        conectado = true;
         break;
       default:
         break;
@@ -397,28 +379,609 @@ function dibujarFlecha(lado){
       case "arriba":
       //Si apunta arriba
         contexto.beginPath(); //Empezamos el camino
-        //Nos ponemos en el nodo que se selecciono primero
-        contexto.moveTo(coorCuadritoAntesX+SelectBoxSize,coorCuadritoAntesY+SelectBoxSize);
-        //Nos movemos al segundo nodo para hacer el puente
-        contexto.lineTo(cuadrosSelectX[mySelCuadro], cuadrosSelectY[mySelCuadro]+SelectBoxSize);
-        contexto.stroke();  //Dibujamos la linea
+        switch (mySelCuadro2){
+          case 1:
+            //Nos movemos al nodo inicial
+            contexto.moveTo(coorCuadritoAntesX+SelectBoxSize,coorCuadritoAntesY);
+            //Vemos si nuestro dibujo a conectar esta arriba o abajo 
+            if(coorCuadritoAntesY-SelectBoxSize>cuadrosSelectY[mySelCuadro]+SelectBoxSize){
+              //Nos despegamos del cuadro un poco
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize
+                          ,coorCuadritoAntesY-8);
+              //Si esta arriba da igual si esta a la derecha o la izquierda, solo nos dirigimos
+              //a la coordenada en X y subimos al nodo
+              contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                              coorCuadritoAntesY-8);
+              contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                              cuadrosSelectY[mySelCuadro]+SelectBoxSize);
+            }
+            else{
+              //Si esta abajo, primero nos movemos a un punto en comun
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize,
+                              coorCuadritoAntesY-8);
+              contexto.lineTo(figurasX[mySel2]-8,
+                              coorCuadritoAntesY-8);
+              if(figurasX[mySel2]-8>figurasX[mySel]+figurasW[mySel]){
+                contexto.lineTo(figurasX[mySel2]-8,
+                                cuadrosSelectY[mySelCuadro]+15);
+              }
+              else{
+                contexto.lineTo(figurasX[mySel2]-8,
+                              figurasY[mySel2]+figurasH[mySel2]+8);
+                //Por si la figura se atraviesa con la otra seleccion
+                contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+8),
+                                figurasY[mySel2]+figurasH[mySel2]+8);
+                contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+8),
+                                cuadrosSelectY[mySelCuadro]+15);
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                cuadrosSelectY[mySelCuadro]+15);
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                              cuadrosSelectY[mySelCuadro]+SelectBoxSize);
+            }
+            break;
+          case 3:
+            //Nos movemos al nodo inicial
+            contexto.moveTo(coorCuadritoAntesX,coorCuadritoAntesY);
+            //Vemos si nuestro dibujo a conectar a la izquierda o derecha
+            if(coorCuadritoAntesX+(figurasW[mySel2]+8)/2>figurasX[mySel]){
+              //Si esta a la izquierda es conexion directa
+              //Nos despegamos del cuadro un poco
+              contexto.lineTo(coorCuadritoAntesX-8,
+                              coorCuadritoAntesY);
+              //Si esta arriba da igual si esta a la derecha o la izquierda, solo nos dirigimos
+              //a la coordenada en X y subimos al nodo
+              if(coorCuadritoAntesX-8>figurasX[mySel]+figurasW[mySel]+8){
+                contexto.lineTo(coorCuadritoAntesX-8, 
+                              cuadrosSelectY[mySelCuadro]+15);
+              }
+              else{
+                if(coorCuadritoAntesY<figurasY[mySel]+figurasH[mySel]){
+                  contexto.lineTo(coorCuadritoAntesX-8,
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+8),
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+8),
+                                  cuadrosSelectY[mySelCuadro]+15);
+                } 
+                else{
+                  if(coorCuadritoAntesX-8<figurasX[mySel]+figurasW[mySel]/2){
+                    contexto.lineTo(coorCuadritoAntesX-8,
+                                    figurasY[mySel2]-8);
+                    contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                    figurasY[mySel2]-8); 
+                  }
+                  else{
+                    contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                    coorCuadritoAntesY);
+                  }
+                }   
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                              cuadrosSelectY[mySelCuadro]+15);
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                              cuadrosSelectY[mySelCuadro]+SelectBoxSize);
+            }
+            else{
+              //Si esta a la izquierda, primero nos movemos a un punto en comun
+              contexto.lineTo(coorCuadritoAntesX-8,
+                              coorCuadritoAntesY);
+              if(figurasY[mySel2]+figurasH[mySel2]>figurasY[mySel]+figurasH[mySel]){
+                contexto.lineTo(figurasX[mySel2]-8,
+                                figurasY[mySel2]+figurasH[mySel2]+15);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                figurasY[mySel2]+figurasH[mySel2]+15);
+              }
+              else{
+                contexto.lineTo(coorCuadritoAntesX-8,
+                                figurasY[mySel2]+figurasH[mySel2]+8);
+                //Por si la figura se atraviesa con la otra seleccion
+                contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+8),
+                                figurasY[mySel2]+figurasH[mySel2]+8);
+                contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+8),
+                                cuadrosSelectY[mySelCuadro]+15);
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                cuadrosSelectY[mySelCuadro]+15);
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                              cuadrosSelectY[mySelCuadro]+SelectBoxSize);
+            }
+            break;
+          case 4:
+            //Nos movemos al nodo inicial
+            contexto.moveTo(coorCuadritoAntesX+SelectBoxSize,coorCuadritoAntesY);
+            //Vemos si nuestro dibujo a conectar a la izquierda o derecha
+            if(coorCuadritoAntesX+SelectBoxSize-figurasW[mySel2]/2<figurasX[mySel]){
+              //Si esta a la izquierda es conexion directa
+              //Nos despegamos del cuadro un poco
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                              coorCuadritoAntesY);
+              //Si esta arriba da igual si esta a la derecha o la izquierda, solo nos dirigimos
+              //a la coordenada en X y subimos al nodo
+              if(coorCuadritoAntesX+SelectBoxSize+8<figurasX[mySel]){
+                contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8, 
+                              cuadrosSelectY[mySelCuadro]+15);
+              }
+              else{
+                if(coorCuadritoAntesY>figurasY[mySel]+figurasH[mySel]){
+                  if(coorCuadritoAntesX+SelectBoxSize+8>figurasX[mySel]&&
+                     coorCuadritoAntesX+SelectBoxSize+8<figurasX[mySel]+figurasW[mySel2]/2){
+                    contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                    figurasY[mySel2]+8);
+                    contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                    figurasY[mySel2]+8); 
+                  }
+                  else{
+                    contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                    figurasY[mySel2]+figurasH[mySel2]+8);
+                    contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+8),
+                                    figurasY[mySel2]+figurasH[mySel2]+8);
+                    contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+8),
+                                    cuadrosSelectY[mySelCuadro]+15);
+                  }
+                } 
+                else{
+                  if(coorCuadritoAntesX+SelectBoxSize+8>figurasX[mySel]-8){
+                    contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                    figurasY[mySel2]+figurasH[mySel2]+8);
+                    contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+8),
+                                    figurasY[mySel2]+figurasH[mySel2]+8);
+                    contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+8),
+                                    cuadrosSelectY[mySelCuadro]+15);
+                  }
+                  else{
+                    contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                    coorCuadritoAntesY);
+                  }
+                }   
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                              cuadrosSelectY[mySelCuadro]+15);
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                              cuadrosSelectY[mySelCuadro]+SelectBoxSize);
+            }
+            else{
+              //Si esta a la izquierda, primero nos movemos a un punto en comun
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                              coorCuadritoAntesY);
+              if(figurasY[mySel2]+figurasH[mySel2]>figurasY[mySel]+figurasH[mySel]){
+                contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                figurasY[mySel2]+figurasH[mySel2]+15);
+                if(figurasX[mySel2]-8<cuadrosSelectX[mySelCuadro]){
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  figurasY[mySel2]+figurasH[mySel2]+15);
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  figurasY[mySel2]-8);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                  figurasY[mySel2]-8);
+                }
+                else{
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                  figurasY[mySel2]+figurasH[mySel2]+15);
+                }
+                
+              }
+              else{
+                contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                figurasY[mySel2]+figurasH[mySel2]+8);
+                //Por si la figura se atraviesa con la otra seleccion
+                if(coorCuadritoAntesY<figurasY[mySel]+figurasH[mySel]/2+4&&
+                   coorCuadritoAntesX>figurasX[mySel]+figurasW[mySel]+8){
+                  contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                  cuadrosSelectY[mySelCuadro]+15);
+                }
+                else{
+                  contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+8),
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+8),
+                                  cuadrosSelectY[mySelCuadro]+15);
+                }
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                cuadrosSelectY[mySelCuadro]+15);
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                              cuadrosSelectY[mySelCuadro]+SelectBoxSize);
+            }
+            break;
+          case 6:
+            //Nos movemos al nodo inicial
+            contexto.moveTo(coorCuadritoAntesX+SelectBoxSize,coorCuadritoAntesY+SelectBoxSize);
+            //Vemos si nuestro dibujo a conectar esta arriba o abajo 
+            if(coorCuadritoAntesY+SelectBoxSize>cuadrosSelectY[mySelCuadro]+SelectBoxSize){
+              //Nos despegamos del cuadro un poco
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize
+                          ,coorCuadritoAntesY+SelectBoxSize+8);
+              if(figurasX[mySel2]+figurasW[mySel2]/2>figurasX[mySel]&&
+                 figurasX[mySel2]+figurasW[mySel2]/2<figurasX[mySel]+figurasW[mySel]){
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  coorCuadritoAntesY+SelectBoxSize+8);
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  figurasY[mySel2]-8);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                  figurasY[mySel2]-8);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                                  cuadrosSelectY[mySelCuadro]+SelectBoxSize);
+              }
+              else{
+                //Si esta arriba da igual si esta a la derecha o la izquierda, solo nos dirigimos
+                //a la coordenada en X y subimos al nodo
+                contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                                coorCuadritoAntesY+SelectBoxSize+8);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                                cuadrosSelectY[mySelCuadro]+SelectBoxSize);
+              }
+            }
+            else{
+              //Si esta abajo, primero nos movemos a un punto en comun
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize,
+                              coorCuadritoAntesY+SelectBoxSize+8);
+              if(coorCuadritoAntesX+SelectBoxSize>figurasX[mySel]+figurasW[mySel]){
+                contexto.lineTo(coorCuadritoAntesX+SelectBoxSize,
+                                cuadrosSelectY[mySelCuadro]+15);
+              }
+              else{
+                //Por si la figura se atraviesa con la otra seleccion
+                contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+8),
+                                figurasY[mySel2]+figurasH[mySel2]+8);
+                contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+8),
+                                cuadrosSelectY[mySelCuadro]+15);
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                cuadrosSelectY[mySelCuadro]+15);
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                              cuadrosSelectY[mySelCuadro]+SelectBoxSize);
+            }
+            break;
+          default:
+            break;
+        }
         contexto.moveTo(cuadrosSelectX[mySelCuadro], cuadrosSelectY[mySelCuadro]+SelectBoxSize);
         contexto.lineTo(cuadrosSelectX[mySelCuadro]+6, cuadrosSelectY[mySelCuadro]+SelectBoxSize+6);
-        contexto.stroke();  //Dibujamos la linea
         contexto.moveTo(cuadrosSelectX[mySelCuadro], cuadrosSelectY[mySelCuadro]+SelectBoxSize);
         contexto.lineTo(cuadrosSelectX[mySelCuadro]-6, cuadrosSelectY[mySelCuadro]+SelectBoxSize+6);
         contexto.stroke();  //Dibujamos la linea
+       
         break;
       case "derecha":
-      //Si apunta a la derecha
         contexto.beginPath(); //Empezamos el camino
-        //Nos ponemos en el nodo que se selecciono primero
-        contexto.moveTo(coorCuadritoAntesX,coorCuadritoAntesY);
-        //Nos movemos al segundo nodo para hacer el puente
-        contexto.lineTo(cuadrosSelectX[mySelCuadro], cuadrosSelectY[mySelCuadro]);
-        contexto.stroke();  //Dibujamos la linea
+        switch (mySelCuadro2){
+          case 1:
+            //Nos movemos al nodo inicial
+            contexto.moveTo(coorCuadritoAntesX+SelectBoxSize,coorCuadritoAntesY);
+            //Vemos si nuestro dibujo a conectar esta arriba o abajo 
+            if(coorCuadritoAntesY-SelectBoxSize>figurasY[mySel]+figurasH[mySel]){
+              //Nos despegamos del cuadro un poco
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize,
+                              coorCuadritoAntesY-8);
+              //Si esta arriba da igual si esta a la derecha o la izquierda, solo nos dirigimos
+              //a la coordenada en X y subimos al nodo
+              contexto.lineTo(cuadrosSelectX[mySelCuadro]-15, 
+                              coorCuadritoAntesY-8);
+              contexto.lineTo(cuadrosSelectX[mySelCuadro]-15, 
+                              cuadrosSelectY[mySelCuadro]);
+            }
+            else{
+              //Si esta abajo, primero nos movemos a un punto en comun
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize,
+                              coorCuadritoAntesY-8);
+              if(figurasX[mySel2]-8>figurasX[mySel]+figurasW[mySel]&&
+                 figurasY[mySel2]>figurasY[mySel]+figurasH[mySel]+8){
+                contexto.lineTo(figurasX[mySel2]-8,
+                              coorCuadritoAntesY-8);
+                contexto.lineTo(figurasX[mySel2]-8,
+                                cuadrosSelectY[mySelCuadro]);
+              }
+              else{
+                if(figurasY[mySel2]-8>figurasY[mySel]+figurasH[mySel]+8){
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  coorCuadritoAntesY-8);
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  //Por si la figura se atraviesa con la otra seleccion
+                  contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+16),
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+16),
+                                  cuadrosSelectY[mySelCuadro]);
+                }
+                else if(figurasY[mySel2]+figurasH[mySel2]>figurasY[mySel]-8&&figurasY[mySel]-8<figurasY[mySel]+figurasH[mySel]
+                  &&figurasX[mySel2]+figurasW[mySel2]<figurasX[mySel]){
+                  contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                  coorCuadritoAntesY-8);
+                  contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                  cuadrosSelectY[mySelCuadro]);
+                }
+                else{
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  coorCuadritoAntesY-8);
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  figurasY[mySel]-8);
+                  contexto.lineTo(figurasX[mySel]-15,
+                                  figurasY[mySel]-8);
+                  contexto.lineTo(figurasX[mySel]-15,
+                                  cuadrosSelectY[mySelCuadro]);
+                } 
+              }
+            }
+            contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                            cuadrosSelectY[mySelCuadro]);
+            break;
+          case 3:
+            //Nos movemos al nodo inicial
+            contexto.moveTo(coorCuadritoAntesX,coorCuadritoAntesY);
+            //Vemos si nuestro dibujo a conectar a la izquierda o derecha
+            if(coorCuadritoAntesX+(figurasW[mySel2]+8)/2>figurasX[mySel]){
+              //Si esta a la izquierda es conexion directa
+              //Nos despegamos del cuadro un poco
+              contexto.lineTo(coorCuadritoAntesX-8,
+                              coorCuadritoAntesY);
+              //Si esta arriba da igual si esta a la derecha o la izquierda, solo nos dirigimos
+              //a la coordenada en X y subimos al nodo
+              if(coorCuadritoAntesX-8>figurasX[mySel]+figurasW[mySel]+8){
+                if(figurasY[mySel2]<figurasY[mySel]+figurasH[mySel]/2){
+                  contexto.lineTo(coorCuadritoAntesX-8, 
+                                  figurasY[mySel]-15);
+                  contexto.lineTo(figurasX[mySel]-15, 
+                                  figurasY[mySel]-15);
+                  contexto.lineTo(figurasX[mySel]-15, 
+                                  cuadrosSelectY[mySelCuadro]);
+                }
+                else{
+                  contexto.lineTo(coorCuadritoAntesX-8, 
+                                  figurasY[mySel]+figurasH[mySel]+15);
+                  contexto.lineTo(figurasX[mySel]-15, 
+                                  figurasY[mySel]+figurasH[mySel]+15);
+                  contexto.lineTo(figurasX[mySel]-15, 
+                                  cuadrosSelectY[mySelCuadro]);
+                }
+                
+              }
+              else{
+                if(coorCuadritoAntesY<figurasY[mySel]+figurasH[mySel]){
+                  contexto.lineTo(coorCuadritoAntesX-8,
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+15),
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+15),
+                                  cuadrosSelectY[mySelCuadro]);
+                } 
+                else{
+                  if(coorCuadritoAntesX-8<figurasX[mySel]+figurasW[mySel]/2){
+                    contexto.lineTo(coorCuadritoAntesX-8,
+                                    figurasY[mySel2]-8);
+                    contexto.lineTo(cuadrosSelectX[mySelCuadro]-15,
+                                    figurasY[mySel2]-8); 
+                  }
+                  else{
+                    contexto.lineTo(cuadrosSelectX[mySelCuadro]-15,
+                                    coorCuadritoAntesY);
+                  }
+                }   
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro]-15, 
+                              cuadrosSelectY[mySelCuadro]);
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                              cuadrosSelectY[mySelCuadro]);
+            }
+            else{
+              //Si esta a la izquierda, primero nos movemos a un punto en comun
+              contexto.lineTo(coorCuadritoAntesX-8,
+                              coorCuadritoAntesY);
+              if(figurasY[mySel2]+figurasH[mySel2]>figurasY[mySel]+figurasH[mySel]){
+                if(figurasX[mySel2]+figurasW[mySel2]+8>figurasX[mySel2]){
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  cuadrosSelectY[mySelCuadro]);
+                }
+                else{
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  figurasY[mySel2]+figurasH[mySel2]+15);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro]-15,
+                                  figurasY[mySel2]+figurasH[mySel2]+15);
+                }
+              }
+              else{
+                contexto.lineTo(coorCuadritoAntesX-8,
+                                figurasY[mySel2]+figurasH[mySel2]+8);
+                //Por si la figura se atraviesa con la otra seleccion
+                contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+15),
+                                figurasY[mySel2]+figurasH[mySel2]+8);
+                contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+15),
+                                cuadrosSelectY[mySelCuadro]);
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro]-15,
+                              cuadrosSelectY[mySelCuadro]);
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                              cuadrosSelectY[mySelCuadro]);
+            }
+            break;
+          case 4:
+            //Nos movemos al nodo inicial
+            contexto.moveTo(coorCuadritoAntesX+SelectBoxSize,coorCuadritoAntesY);
+            //Vemos si nuestro dibujo a conectar a la izquierda o derecha
+            if(coorCuadritoAntesX+SelectBoxSize-figurasW[mySel2]/2<figurasX[mySel]){
+              //Si esta a la izquierda es conexion directa
+              //Nos despegamos del cuadro un poco
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                              coorCuadritoAntesY);
+              //Si esta arriba da igual si esta a la derecha o la izquierda, solo nos dirigimos
+              //a la coordenada en X y subimos al nodo
+              if(coorCuadritoAntesX+SelectBoxSize+15<figurasX[mySel]){
+                contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8, 
+                              cuadrosSelectY[mySelCuadro]);
+              }
+              else{
+                if(coorCuadritoAntesY>figurasY[mySel]+figurasH[mySel]){
+                  if(coorCuadritoAntesX+SelectBoxSize+15>figurasX[mySel]&&
+                     coorCuadritoAntesX+SelectBoxSize+15<figurasX[mySel]+figurasW[mySel2]/2){
+                    contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                    figurasY[mySel2]-8);
+                    contexto.lineTo(cuadrosSelectX[mySelCuadro]-15,
+                                    figurasY[mySel2]-8); 
+                  }
+                  else{
+                    contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                    figurasY[mySel2]-8);
+                    contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+15),
+                                    figurasY[mySel2]-8);
+                    contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+15),
+                                    cuadrosSelectY[mySelCuadro]);
+                  }
+                } 
+                else{
+                  if(coorCuadritoAntesX+SelectBoxSize+8>figurasX[mySel]-8){
+                    contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                    figurasY[mySel2]+figurasH[mySel2]+8);
+                    contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+15),
+                                    figurasY[mySel2]+figurasH[mySel2]+8);
+                    contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+15),
+                                    cuadrosSelectY[mySelCuadro]);
+                  }
+                  else{
+                    contexto.lineTo(cuadrosSelectX[mySelCuadro]-15,
+                                    coorCuadritoAntesY);
+                  }
+                }   
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro]-15, 
+                              cuadrosSelectY[mySelCuadro]);
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                              cuadrosSelectY[mySelCuadro]);
+            }
+            else{
+              //Si esta a la izquierda, primero nos movemos a un punto en comun
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                              coorCuadritoAntesY);
+              if(figurasY[mySel2]+figurasH[mySel2]>figurasY[mySel]+figurasH[mySel]){
+                contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                figurasY[mySel2]+figurasH[mySel2]+15);
+                if(figurasX[mySel2]-8<cuadrosSelectX[mySelCuadro]){
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  figurasY[mySel2]+figurasH[mySel2]+15);
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  figurasY[mySel2]-8);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro]-15,
+                                  figurasY[mySel2]-8);
+                }
+                else{
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro]-15,
+                                  figurasY[mySel2]+figurasH[mySel2]+15);
+                }
+              }
+              else{
+                //Por si la figura se atraviesa con la otra seleccion
+                if(coorCuadritoAntesY<figurasY[mySel]+figurasH[mySel]/2+4&&
+                   coorCuadritoAntesX>figurasX[mySel]+figurasW[mySel]+8){
+                  if(figurasY[mySel2]+figurasH[mySel2]+8<figurasY[mySel]){
+                    contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                    figurasY[mySel2]+figurasH[mySel2]+8);
+                    contexto.lineTo(cuadrosSelectX[mySelCuadro]-15,
+                                    figurasY[mySel2]+figurasH[mySel2]+8);
+                  }
+                  else{
+                    contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                    figurasY[mySel2]-8);
+                    contexto.lineTo(cuadrosSelectX[mySelCuadro]-15,
+                                    figurasY[mySel2]-8);
+                  }
+                  
+                }
+                else{
+                  contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+15),
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+15),
+                                  cuadrosSelectY[mySelCuadro]);
+                }
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro]-15,
+                                cuadrosSelectY[mySelCuadro]);
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                              cuadrosSelectY[mySelCuadro]);
+            }
+            break;
+          case 6:
+            //Nos movemos al nodo inicial
+            contexto.moveTo(coorCuadritoAntesX+SelectBoxSize,coorCuadritoAntesY+SelectBoxSize);
+            //Vemos si nuestro dibujo a conectar esta arriba o abajo 
+            if(coorCuadritoAntesY+SelectBoxSize<figurasY[mySel]+figurasH[mySel]){
+              //Nos despegamos del cuadro un poco
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize,
+                              coorCuadritoAntesY+SelectBoxSize+8);
+              if(figurasY[mySel2]+figurasH[mySel2]>figurasY[mySel]-8&&figurasY[mySel]-8<figurasY[mySel]+figurasH[mySel]
+                      &&figurasX[mySel2]>figurasX[mySel]+figurasW[mySel]){
+                contexto.lineTo(coorCuadritoAntesX+SelectBoxSize,
+                                figurasY[mySel]+figurasH[mySel]+8);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro]-15,
+                                figurasY[mySel]+figurasH[mySel]+8);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro]-15, 
+                                cuadrosSelectY[mySelCuadro]);
+              }
+              else if(figurasY[mySel2]>figurasY[mySel]+figurasH[mySel]){
+                contexto.lineTo(cuadrosSelectX[mySelCuadro]-15,
+                                coorCuadritoAntesY+SelectBoxSize+8);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro]-15, 
+                                cuadrosSelectY[mySelCuadro]);
+              }
+              else{
+                //Si esta arriba da igual si esta a la derecha o la izquierda, solo nos dirigimos
+                //a la coordenada en X y subimos al nodo
+                contexto.lineTo(cuadrosSelectX[mySelCuadro]-15, 
+                                coorCuadritoAntesY+SelectBoxSize+8);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro]-15, 
+                                cuadrosSelectY[mySelCuadro]);
+              }
+            }
+            else{
+              //Si esta abajo, primero nos movemos a un punto en comun
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize,
+                              coorCuadritoAntesY+SelectBoxSize+8);
+              if(figurasX[mySel2]>figurasX[mySel]&&
+                 figurasY[mySel2]>figurasY[mySel]+figurasH[mySel]+8){
+                contexto.lineTo(cuadrosSelectX[mySelCuadro]-15, 
+                                coorCuadritoAntesY+SelectBoxSize+8);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro]-15, 
+                                cuadrosSelectY[mySelCuadro]);
+              }
+              else{
+                if(figurasY[mySel2]-8>figurasY[mySel]+figurasH[mySel]&&figurasX[mySel2]+figurasW[mySel2]>figurasX[mySel]-8){
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  coorCuadritoAntesY+SelectBoxSize+8);
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  figurasY[mySel2]-8);
+                  //Por si la figura se atraviesa con la otra seleccion
+                  contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+15),
+                                  figurasY[mySel2]-8);
+                  contexto.lineTo(figurasX[mySel2]-(figurasX[mySel2]-figurasX[mySel]+15),
+                                  cuadrosSelectY[mySelCuadro]);
+                }
+                else if(figurasY[mySel2]+figurasH[mySel2]>figurasY[mySel]-8&&figurasY[mySel]-8<figurasY[mySel]+figurasH[mySel]
+                  &&figurasX[mySel2]+figurasW[mySel2]<figurasX[mySel]){
+                  contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                  coorCuadritoAntesY+SelectBoxSize+8);
+                  contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                  cuadrosSelectY[mySelCuadro]);
+                }
+                else{
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  coorCuadritoAntesY+SelectBoxSize+8);
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  figurasY[mySel]+SelectBoxSize+8);
+                  contexto.lineTo(figurasX[mySel]-15,
+                                  figurasY[mySel]+SelectBoxSize+8);
+                  contexto.lineTo(figurasX[mySel]-15,
+                                  cuadrosSelectY[mySelCuadro]);
+                } 
+              }
+            }
+            contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                            cuadrosSelectY[mySelCuadro]);
+            break;
+          default:
+            break;
+        }
+      //Si apunta a la derecha
+        contexto.moveTo(cuadrosSelectX[mySelCuadro], cuadrosSelectY[mySelCuadro]);
         contexto.lineTo(cuadrosSelectX[mySelCuadro]-6, cuadrosSelectY[mySelCuadro]-6);
-        contexto.stroke();  //Dibujamos la linea
         contexto.moveTo(cuadrosSelectX[mySelCuadro], cuadrosSelectY[mySelCuadro]);
         contexto.lineTo(cuadrosSelectX[mySelCuadro]-6, cuadrosSelectY[mySelCuadro]+6);
         contexto.stroke();  //Dibujamos la linea
@@ -426,13 +989,232 @@ function dibujarFlecha(lado){
       case "abajo":
       //Si apunta abajo
         contexto.beginPath(); //Empezamos el camino
-        //Nos ponemos en el nodo que se selecciono primero
-        contexto.moveTo(coorCuadritoAntesX,coorCuadritoAntesY);
-        //Nos movemos al segundo nodo para hacer el puente
-        contexto.lineTo(cuadrosSelectX[mySelCuadro], cuadrosSelectY[mySelCuadro]);
-        contexto.stroke();  //Dibujamos la linea
+        switch (mySelCuadro2){
+          case 1:
+            //Nos movemos al nodo inicial
+            contexto.moveTo(coorCuadritoAntesX+SelectBoxSize,coorCuadritoAntesY);
+            //Vemos si nuestro dibujo a conectar esta arriba o abajo 
+            if(coorCuadritoAntesY-SelectBoxSize>figurasY[mySel]){
+              //Nos despegamos del cuadro un poco
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize,
+                              coorCuadritoAntesY-8);
+              if(figurasX[mySel2]+figurasW[mySel2]>figurasX[mySel]&&figurasX[mySel2]<figurasX[mySel]+figurasW[mySel]){
+                contexto.lineTo(figurasX[mySel]+figurasW[mySel]+8, 
+                                coorCuadritoAntesY-8);
+                contexto.lineTo(figurasX[mySel]+figurasW[mySel]+8, 
+                                figurasY[mySel]-15);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                                figurasY[mySel]-15);
+              }
+              else{
+                contexto.lineTo(coorCuadritoAntesX+SelectBoxSize, 
+                                figurasY[mySel]-15);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                                figurasY[mySel]-15);
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                              cuadrosSelectY[mySelCuadro]);
+            }
+            else{
+              //Si esta abajo, primero nos movemos a un punto en comun
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize,
+                              coorCuadritoAntesY-8);
+              if(figurasX[mySel2]+figurasW[mySel2]>figurasX[mySel]&&figurasX[mySel2]<figurasX[mySel]+figurasW[mySel]){
+                contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8, 
+                                coorCuadritoAntesY-8);
+                contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8, 
+                                figurasY[mySel2]+figurasH[mySel2]+15);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                                figurasY[mySel2]+figurasH[mySel2]+15);
+              }
+              else{
+                contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                                coorCuadritoAntesY-8);
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                              cuadrosSelectY[mySelCuadro]);
+            }
+            contexto.lineTo(cuadrosSelectX[mySelCuadro]+SelectBoxSize,
+                            cuadrosSelectY[mySelCuadro]);
+            break;
+          case 3:
+            //Nos movemos al nodo inicial
+            contexto.moveTo(coorCuadritoAntesX,coorCuadritoAntesY);
+            //Vemos si nuestro dibujo a conectar a la izquierda o derecha
+            if(coorCuadritoAntesX>figurasX[mySel]){
+              //Si esta a la izquierda es conexion directa
+              //Nos despegamos del cuadro un poco
+              contexto.lineTo(coorCuadritoAntesX-8,
+                              coorCuadritoAntesY);
+              //Si esta arriba da igual si esta a la derecha o la izquierda, solo nos dirigimos
+              //a la coordenada en X y subimos al nodo
+              if(coorCuadritoAntesX-8>figurasX[mySel]+figurasW[mySel]/2+8&&coorCuadritoAntesY-8<figurasY[mySel]-10){
+                contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                coorCuadritoAntesY);
+              }
+              else{
+                if(coorCuadritoAntesY-9>figurasY[mySel]-10&&figurasX[mySel2]>figurasX[mySel]+figurasW[mySel]+10){
+                  contexto.lineTo(coorCuadritoAntesX-8,
+                                  figurasY[mySel]-10);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                  figurasY[mySel]-10);
+                } 
+                else{
+                  contexto.lineTo(coorCuadritoAntesX-8,
+                                  figurasY[mySel]+figurasH[mySel]+8);
+                  contexto.lineTo(figurasX[mySel]+figurasW[mySel]+8,
+                                  figurasY[mySel]+figurasH[mySel]+8);
+                  contexto.lineTo(figurasX[mySel]+figurasW[mySel]+8,
+                                  cuadrosSelectY[mySelCuadro]-15);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                  cuadrosSelectY[mySelCuadro]-15);
+                }   
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                              cuadrosSelectY[mySelCuadro]);
+            }
+            else{
+              //Si esta a la izquierda, primero nos movemos a un punto en comun
+              contexto.lineTo(coorCuadritoAntesX-8,
+                              coorCuadritoAntesY);
+              if(figurasY[mySel2]>figurasY[mySel]){
+                contexto.lineTo(coorCuadritoAntesX-8,
+                                cuadrosSelectY[mySelCuadro]-15);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                cuadrosSelectY[mySelCuadro]-15);
+              }
+              else{
+                contexto.lineTo(coorCuadritoAntesX-8,
+                                figurasY[mySel2]+figurasH[mySel2]+8);
+                contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                figurasY[mySel2]+figurasH[mySel2]+8);
+                contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                figurasY[mySel]-10);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                figurasY[mySel]-10);
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                cuadrosSelectY[mySelCuadro]);
+            }
+            break;
+          case 4:
+            //Nos movemos al nodo inicial
+            contexto.moveTo(coorCuadritoAntesX+SelectBoxSize,coorCuadritoAntesY);
+            //Vemos si nuestro dibujo a conectar a la izquierda o derecha
+            if(coorCuadritoAntesX+SelectBoxSize<figurasX[mySel]+figurasW[mySel]/2){
+              //Si esta a la izquierda es conexion directa
+              //Nos despegamos del cuadro un poco
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                              coorCuadritoAntesY);
+              //Si esta arriba da igual si esta a la derecha o la izquierda, solo nos dirigimos
+              //a la coordenada en X y subimos al nodo
+              if(coorCuadritoAntesX+SelectBoxSize+8<figurasX[mySel]+figurasW[mySel]/2+8&&coorCuadritoAntesY-8<figurasY[mySel]-10){
+                contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                coorCuadritoAntesY);
+              }
+              else{
+                if(figurasX[mySel2]+figurasW[mySel2]<figurasX[mySel]-10){
+                  contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                  figurasY[mySel]-10);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                  figurasY[mySel]-10);
+                } 
+                else{
+                  contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                  figurasY[mySel2]-8);
+                  contexto.lineTo(figurasX[mySel]-8,
+                                  figurasY[mySel2]-8);
+                  contexto.lineTo(figurasX[mySel]-8,
+                                  cuadrosSelectY[mySelCuadro]-15);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                  cuadrosSelectY[mySelCuadro]-15);
+                }   
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                              cuadrosSelectY[mySelCuadro]);
+            }
+            else{
+              //Si esta a la izquierda, primero nos movemos a un punto en comun
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                              coorCuadritoAntesY);
+              if(figurasY[mySel2]>figurasY[mySel]+figurasH[mySel]+9){
+                contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                figurasY[mySel]+figurasH[mySel]+8);
+                contexto.lineTo(figurasX[mySel]+figurasW[mySel]+8,
+                                figurasY[mySel]+figurasH[mySel]+8);
+                contexto.lineTo(figurasX[mySel]+figurasW[mySel]+8,
+                                cuadrosSelectY[mySelCuadro]-10);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                cuadrosSelectY[mySelCuadro]-10);
+              }
+              else{
+                if(figurasY[mySel2]+figurasH[mySel2]+10<figurasY[mySel]){
+                  contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                  figurasY[mySel]-10);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                  figurasY[mySel]-10);
+                }
+                else{
+                  contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                  figurasY[mySel2]-8);
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  figurasY[mySel2]-8);
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  figurasY[mySel]-10);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                  figurasY[mySel]-10);
+                }
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                                cuadrosSelectY[mySelCuadro]);
+            }
+            break;
+          case 6:
+            //Nos movemos al nodo inicial
+            contexto.moveTo(coorCuadritoAntesX+SelectBoxSize,coorCuadritoAntesY+SelectBoxSize);
+            //Vemos si nuestro dibujo a conectar esta arriba o abajo 
+            if(coorCuadritoAntesY-SelectBoxSize>figurasY[mySel]){
+              //Nos despegamos del cuadro un poco
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize,
+                              coorCuadritoAntesY+SelectBoxSize+8);
+              if(figurasX[mySel2]+figurasW[mySel2]<figurasX[mySel]+figurasW[mySel]){
+                contexto.lineTo(figurasX[mySel2]-8, 
+                                coorCuadritoAntesY+SelectBoxSize+8);
+                contexto.lineTo(figurasX[mySel2]-8, 
+                                figurasY[mySel]-15);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                                figurasY[mySel]-15);
+              }
+              else{
+                contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8, 
+                                coorCuadritoAntesY+SelectBoxSize+8);
+                contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8, 
+                                figurasY[mySel]-15);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                                figurasY[mySel]-15);
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro], 
+                              cuadrosSelectY[mySelCuadro]);
+            }
+            else{
+              //Si esta abajo, primero nos movemos a un punto en comun
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize,
+                              coorCuadritoAntesY+SelectBoxSize+8);
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                              coorCuadritoAntesY+SelectBoxSize+8);
+              contexto.lineTo(cuadrosSelectX[mySelCuadro],
+                              cuadrosSelectY[mySelCuadro]);
+            }
+            break;
+          default:
+            break;
+        }
+        contexto.moveTo(cuadrosSelectX[mySelCuadro], cuadrosSelectY[mySelCuadro]);
         contexto.lineTo(cuadrosSelectX[mySelCuadro]-6, cuadrosSelectY[mySelCuadro]-6);
-        contexto.stroke();  //Dibujamos la linea
         contexto.moveTo(cuadrosSelectX[mySelCuadro], cuadrosSelectY[mySelCuadro]);
         contexto.lineTo(cuadrosSelectX[mySelCuadro]+6, cuadrosSelectY[mySelCuadro]-6);
         contexto.stroke();  //Dibujamos la linea
@@ -440,14 +1222,274 @@ function dibujarFlecha(lado){
       case "izquierda":
       //Si apunta a la izquierda
         contexto.beginPath(); //Empezamos el camino
-        //Nos ponemos en el nodo que se selecciono primero
-        contexto.moveTo(coorCuadritoAntesX+SelectBoxSize,coorCuadritoAntesY+SelectBoxSize);
-        //Nos movemos al segundo nodo para hacer el puente
-        contexto.lineTo(cuadrosSelectX[mySelCuadro]+SelectBoxSize, cuadrosSelectY[mySelCuadro]);
-        contexto.stroke();  //Dibujamos la linea
+        switch (mySelCuadro2){
+          case 1:
+            //Nos movemos al nodo inicial
+            contexto.moveTo(coorCuadritoAntesX+SelectBoxSize,coorCuadritoAntesY);
+            //Vemos si nuestro dibujo a conectar esta arriba o abajo 
+            if(coorCuadritoAntesY-SelectBoxSize>figurasY[mySel]+figurasH[mySel]){
+              //Nos despegamos del cuadro un poco
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize,
+                              coorCuadritoAntesY-8);
+              //Si esta arriba da igual si esta a la derecha o la izquierda, solo nos dirigimos
+              //a la coordenada en X y subimos al nodo
+              contexto.lineTo(cuadrosSelectX[mySelCuadro]+SelectBoxSize+15, 
+                              coorCuadritoAntesY-8);
+              contexto.lineTo(cuadrosSelectX[mySelCuadro]+SelectBoxSize+15, 
+                              cuadrosSelectY[mySelCuadro]);
+            }
+            else{
+              //Si esta abajo, primero nos movemos a un punto en comun
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize,
+                              coorCuadritoAntesY-8);
+              if(figurasX[mySel2]+8>figurasX[mySel]+figurasW[mySel]){
+                contexto.lineTo(figurasX[mySel2]-8,
+                              coorCuadritoAntesY-8);
+                contexto.lineTo(figurasX[mySel2]-8,
+                                cuadrosSelectY[mySelCuadro]);
+              }
+              else{
+                if(figurasX[mySel]+figurasW[mySel]>figurasX[mySel2]-8&&figurasX[mySel]<figurasX[mySel2]+figurasW[mySel2]){
+                  contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                  coorCuadritoAntesY-8);
+                  contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  //Por si la figura se atraviesa con la otra seleccion
+                  contexto.lineTo(figurasX[mySel2]+(figurasW[mySel]+figurasX[mySel]-figurasX[mySel2]+15),
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(figurasX[mySel2]+(figurasW[mySel]+figurasX[mySel]-figurasX[mySel2]+15),
+                                  cuadrosSelectY[mySelCuadro]);
+                }
+                else{
+                  contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                  coorCuadritoAntesY-8);
+                  contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                  figurasY[mySel]-8);
+                  contexto.lineTo(figurasX[mySel]+figurasW[mySel]+15,
+                                  figurasY[mySel]-8);
+                  contexto.lineTo(figurasX[mySel]+figurasW[mySel]+15,
+                                  cuadrosSelectY[mySelCuadro]);
+                } 
+              }
+            }
+            contexto.lineTo(cuadrosSelectX[mySelCuadro]+SelectBoxSize,
+                            cuadrosSelectY[mySelCuadro]);
+            break;
+          case 3:
+            //Nos movemos al nodo inicial
+            contexto.moveTo(coorCuadritoAntesX,coorCuadritoAntesY);
+            //Vemos si nuestro dibujo a conectar a la izquierda o derecha
+            if(coorCuadritoAntesX+(figurasW[mySel2]+8)/2>figurasX[mySel]){
+              //Si esta a la izquierda es conexion directa
+              //Nos despegamos del cuadro un poco
+              contexto.lineTo(coorCuadritoAntesX-8,
+                              coorCuadritoAntesY);
+              //Si esta arriba da igual si esta a la derecha o la izquierda, solo nos dirigimos
+              //a la coordenada en X y subimos al nodo
+              if(coorCuadritoAntesX-8>figurasX[mySel]+figurasW[mySel]+15){
+                contexto.lineTo(coorCuadritoAntesX-8, 
+                                cuadrosSelectY[mySelCuadro]);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro]+15, 
+                                cuadrosSelectY[mySelCuadro]);
+              }
+              else{
+                if(coorCuadritoAntesY<figurasY[mySel]+figurasH[mySel]){
+                  contexto.lineTo(coorCuadritoAntesX-8,
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(figurasX[mySel2]+(figurasW[mySel]+figurasX[mySel]-figurasX[mySel2]+15),
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(figurasX[mySel2]+(figurasW[mySel]+figurasX[mySel]-figurasX[mySel2]+15),
+                                  cuadrosSelectY[mySelCuadro]);
+                } 
+                else{
+                  if(coorCuadritoAntesX-8<figurasX[mySel]+figurasW[mySel]){
+                    contexto.lineTo(coorCuadritoAntesX-8,
+                                    figurasY[mySel2]-8);
+                    contexto.lineTo(cuadrosSelectX[mySelCuadro]+15,
+                                    figurasY[mySel2]-8);
+                    contexto.lineTo(cuadrosSelectX[mySelCuadro]+15,
+                                    cuadrosSelectY[mySelCuadro]);  
+                  }
+                  else{
+                    contexto.lineTo(cuadrosSelectX[mySelCuadro]+15,
+                                    coorCuadritoAntesY);
+                    contexto.lineTo(cuadrosSelectX[mySelCuadro]+15,
+                                    cuadrosSelectY[mySelCuadro]);
+                  }
+                }   
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro]+SelectBoxSize, 
+                              cuadrosSelectY[mySelCuadro]);
+            }
+            else{
+              //Si esta a la izquierda, primero nos movemos a un punto en comun
+              contexto.lineTo(coorCuadritoAntesX-8,
+                              coorCuadritoAntesY);
+              if(figurasY[mySel2]+figurasH[mySel2]>figurasY[mySel]+figurasH[mySel]){
+                if(figurasX[mySel2]+figurasW[mySel2]+8>figurasX[mySel]){
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  figurasY[mySel2]-8);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro]+15,
+                                  figurasY[mySel2]-8);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro]+15,
+                                  cuadrosSelectY[mySelCuadro]);
+                }
+                else{
+                  contexto.lineTo(figurasX[mySel2]-8,
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro]+15,
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro]+15,
+                                  cuadrosSelectY[mySelCuadro]);
+                }
+              }
+              else{
+                contexto.lineTo(coorCuadritoAntesX-8,
+                                figurasY[mySel2]-8);
+                //Por si la figura se atraviesa con la otra seleccion
+                contexto.lineTo(figurasX[mySel2]+(figurasW[mySel]+figurasX[mySel]-figurasX[mySel2]+15),
+                                 figurasY[mySel2]-8);
+                contexto.lineTo(figurasX[mySel2]+(figurasW[mySel]+figurasX[mySel]-figurasX[mySel2]+15),
+                                cuadrosSelectY[mySelCuadro]);
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro]+SelectBoxSize,
+                              cuadrosSelectY[mySelCuadro]);
+            }
+            break;
+          case 4:
+            //Nos movemos al nodo inicial
+            contexto.moveTo(coorCuadritoAntesX+SelectBoxSize,coorCuadritoAntesY);
+            //Vemos si nuestro dibujo a conectar a la izquierda o derecha
+            if(coorCuadritoAntesX+SelectBoxSize-figurasW[mySel2]/2<figurasX[mySel]){
+              //Si esta a la izquierda es conexion directa
+              //Nos despegamos del cuadro un poco
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                              coorCuadritoAntesY);
+              //Si esta arriba da igual si esta a la derecha o la izquierda, solo nos dirigimos
+              //a la coordenada en X y subimos al nodo
+              if(coorCuadritoAntesX+SelectBoxSize+15-figurasW[mySel2]<figurasX[mySel]){
+                if(coorCuadritoAntesY>figurasY[mySel]){
+                  contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                  coorCuadritoAntesY);
+                  contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                  figurasY[mySel]+figurasH[mySel]+8);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro]+15, 
+                                  figurasY[mySel]+figurasH[mySel]+8);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro]+15, 
+                                  cuadrosSelectY[mySelCuadro]);
+                }
+                else{
+                  contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                  coorCuadritoAntesY);
+                  contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                  figurasY[mySel]-8);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro]+15, 
+                                  figurasY[mySel]-8);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro]+15, 
+                                  cuadrosSelectY[mySelCuadro]);
+                }
+
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro]+SelectBoxSize, 
+                              cuadrosSelectY[mySelCuadro]);
+            }
+            else{
+              //Si esta a la izquierda, primero nos movemos a un punto en comun
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                              coorCuadritoAntesY);
+              if(figurasY[mySel2]>figurasY[mySel]+figurasH[mySel]){
+                contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                figurasY[mySel2]-8);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro]+15,
+                                figurasY[mySel2]-8);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro]+15,
+                                cuadrosSelectY[mySelCuadro]);
+              }
+              else{
+                //Por si la figura se atraviesa con la otra seleccion
+                if(coorCuadritoAntesX>figurasX[mySel]+figurasW[mySel]+8){
+                  contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro]+15,
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(cuadrosSelectX[mySelCuadro]+15,
+                                  cuadrosSelectY[mySelCuadro]);
+                }
+                else{
+                  contexto.lineTo(coorCuadritoAntesX+SelectBoxSize+8,
+                                figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(figurasX[mySel2]+(figurasW[mySel]+figurasX[mySel]-figurasX[mySel2]+15),
+                                  figurasY[mySel2]+figurasH[mySel2]+8);
+                  contexto.lineTo(figurasX[mySel2]+(figurasW[mySel]+figurasX[mySel]-figurasX[mySel2]+15),
+                                  cuadrosSelectY[mySelCuadro]);
+                }
+              }
+              contexto.lineTo(cuadrosSelectX[mySelCuadro]+SelectBoxSize,
+                                cuadrosSelectY[mySelCuadro]);
+            }
+            break;
+          case 6:
+            //Nos movemos al nodo inicial
+            contexto.moveTo(coorCuadritoAntesX+SelectBoxSize,coorCuadritoAntesY+SelectBoxSize);
+            //Vemos si nuestro dibujo a conectar esta arriba o abajo 
+            if(coorCuadritoAntesY+SelectBoxSize-8<figurasY[mySel]+figurasH[mySel]){
+              //Nos despegamos del cuadro un poco
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize,
+                              coorCuadritoAntesY+SelectBoxSize+8);
+              if(figurasX[mySel2]>figurasX[mySel]+figurasW[mySel]){
+                contexto.lineTo(coorCuadritoAntesX+SelectBoxSize,
+                                cuadrosSelectY[mySelCuadro]);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro]+15,
+                                cuadrosSelectY[mySelCuadro]);
+              }
+              else if(figurasX[mySel2]+figurasW[mySel2]<figurasX[mySel]){
+                contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                coorCuadritoAntesY+SelectBoxSize+8);
+                contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                figurasY[mySel]-8);
+                contexto.lineTo(figurasX[mySel]+figurasW[mySel]+15,
+                                figurasY[mySel]-8);
+                contexto.lineTo(figurasX[mySel]+figurasW[mySel]+15,
+                                cuadrosSelectY[mySelCuadro]);
+              }
+              else{
+                contexto.lineTo(figurasX[mySel]+figurasW[mySel]+15,
+                                coorCuadritoAntesY+SelectBoxSize+8);
+                contexto.lineTo(figurasX[mySel]+figurasW[mySel]+15,
+                                cuadrosSelectY[mySelCuadro]);
+              }
+            }
+            else{
+              //Si esta abajo, primero nos movemos a un punto en comun
+              contexto.lineTo(coorCuadritoAntesX+SelectBoxSize,
+                              coorCuadritoAntesY+SelectBoxSize+8);
+              if(figurasX[mySel2]<figurasX[mySel]+figurasW[mySel]+15){
+                contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                coorCuadritoAntesY+SelectBoxSize+8);
+                contexto.lineTo(figurasX[mySel2]+figurasW[mySel2]+8,
+                                figurasY[mySel]+figurasH[mySel]+8);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro]+15,
+                                figurasY[mySel]+figurasH[mySel]+8);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro]+15,
+                                cuadrosSelectY[mySelCuadro]);
+              }
+              else{
+                contexto.lineTo(figurasX[mySel2]-15,
+                                coorCuadritoAntesY+SelectBoxSize+8);
+                contexto.lineTo(figurasX[mySel2]-15,
+                                cuadrosSelectY[mySelCuadro]);
+                contexto.lineTo(cuadrosSelectX[mySelCuadro]+15,
+                                cuadrosSelectY[mySelCuadro]);
+              }
+            }
+            contexto.lineTo(cuadrosSelectX[mySelCuadro]+SelectBoxSize,
+                            cuadrosSelectY[mySelCuadro]);
+            break;
+          default:
+            break;
+        }
         contexto.moveTo(cuadrosSelectX[mySelCuadro]+SelectBoxSize, cuadrosSelectY[mySelCuadro]);
         contexto.lineTo(cuadrosSelectX[mySelCuadro]+SelectBoxSize+6, cuadrosSelectY[mySelCuadro]+6);
-        contexto.stroke();  //Dibujamos la linea
         contexto.moveTo(cuadrosSelectX[mySelCuadro]+SelectBoxSize, cuadrosSelectY[mySelCuadro]);
         contexto.lineTo(cuadrosSelectX[mySelCuadro]+SelectBoxSize+6, cuadrosSelectY[mySelCuadro]-6);
         contexto.stroke();  //Dibujamos la linea
@@ -455,6 +1497,113 @@ function dibujarFlecha(lado){
       default:
         break;
     }
+}
+
+/*Funcion que redibuja las lineas entre los nodos cuando se 
+mueven o se borra el canvas*/
+function dibujarConexiones(){
+  var nod = 0;
+  var l = figs.length; //Obtenemos la cantidad de objetos que hay en el canvas
+  var aux = l-1;
+  //Verificamos en la cola cuales tienen conexion
+  for(aux = l-1; aux >= 0; aux--){
+    if(figs[aux].arriba != -1){
+      mySel = aux;
+      CoodenadasRedimSelectConexiones();
+      mySel2 = mySel;
+      if(figs[aux].arribaRef != -1){
+        coorCuadritoAntesX = cuadrosX1[1];
+        coorCuadritoAntesY = cuadrosY1[1];
+        mySelCuadro = figs[aux].arribaRef;
+        mySel = figs[aux].arriba;
+        mySelCuadro2 = 1;
+        esSegundo = true;
+        CoodenadasRedimSelectConexiones();
+        var coordslol = "mySel1 "+mySel+" mySel2 "+mySel2+" en conexiones cuadX1 "
+        +coorCuadritoAntesX+" cuadY1 "+coorCuadritoAntesY+" cuadX2 "
+        +cuadrosSelectX[mySelCuadro]+" cuadY2 "+cuadrosSelectY[mySelCuadro];
+        document.getElementById("demo3").innerHTML = coordslol;
+        switch(figs[aux].arribaRef){
+          case 1:
+            dibujarFlecha("abajo");
+            break;
+          case 4:
+            dibujarFlecha("izquierda");
+            break;
+          case 3:
+            dibujarFlecha("derecha");
+            break;
+          case 6:
+            dibujarFlecha("arriba");
+            break;
+          default:
+            break;
+        }
+        esSeleccionado2 = false;
+        esSeleccionado = false;
+        mySel = -1;
+        mySel2 = -1;
+        mySelCuadro = -1;
+        mySelCuadro2 = -1;
+        conectado = false;
+      }
+      if(figs[aux].derRef != -1){
+        
+      }
+      if(figs[aux].abajoRef != -1){
+        
+      }
+      if(figs[aux].izqaRef != -1){
+        
+      }
+
+    }
+    if(figs[aux].der != -1){
+      if(figs[aux].arribaRef != -1){
+
+      }
+      if(figs[aux].derRef != -1){
+        
+      }
+      if(figs[aux].abajoRef != -1){
+        
+      }
+      if(figs[aux].izqaRef != -1){
+        
+      }
+      
+    }
+    if(figs[aux].abajo != -1){
+      if(figs[aux].arribaRef != -1){
+
+      }
+      if(figs[aux].derRef != -1){
+        
+      }
+      if(figs[aux].abajoRef != -1){
+        
+      }
+      if(figs[aux].izqaRef != -1){
+        
+      }
+      
+    }
+    if(figs[aux].izq != -1){
+      if(figs[aux].arribaRef != -1){
+
+      }
+      if(figs[aux].derRef != -1){
+        
+      }
+      if(figs[aux].abajoRef != -1){
+        
+      }
+      if(figs[aux].izqaRef != -1){
+        
+      }
+      
+    }
+  }
 }
 
 /*Funcion que se encarga de redimensionar la figura si se
@@ -530,8 +1679,6 @@ function obtenerCoordenadas(event){
       esArrastrado = true;  //Inidicamos que fue seleccionada
       offsetx = mx-figurasX[i];
       offsety = my-figurasY[i];
-      /*var jaja = "Hola " + mySel +" "+esSeleccionado;
-      document.getElementById("demo").innerHTML = jaja;*/
       if(event.button == 0){
         canvas.onmousemove = Mover; //Llamamos a la funcion mover
       }
@@ -574,14 +1721,6 @@ function Dejar(){
   contexto.lineWidth = 1;
   contexto.clearRect(0, 0, canvas.width, canvas.height);  //Limpiamos el canvas
   var l = figs.length; //Obtenemos la cantidad de objetos que hay en el canvas
-  //Verificamos en la cola cual es el que estamos moviendo
-  /*for(var aux = l-1; aux >= 0; aux--){
-    contexto.strokeRect(figurasX[aux],figurasY[aux],figurasW[aux],figurasH[aux]);
-  }*/
-  //triag();
-  /*if(!esSeleccionado&&!esSeleccionado2){
-    canvas.ondblclick=dibujarConexiones();
-  }*/
   esNuevo = false;
   Dibujar("iniciar");
   Dibujar("final");
@@ -590,125 +1729,9 @@ function Dejar(){
   Dibujar("Condicional");
   Dibujar("Variable");
   Dibujar("Asignacion");
+  //dibujarConexiones();
   esNuevo = true;
 }
-
-function triag(){
-  contexto.beginPath();
-  contexto.moveTo(figurasX[2],figurasY[2]);
-  contexto.lineTo(figurasX[2],figurasY[2]+figurasH[2]);
-  contexto.lineTo(figurasX[2]+figurasW[2],figurasY[2]);
-  contexto.closePath();
-  contexto.fill();
-}
-
-/*Funcion que redibuja las lineas entre los nodos cuando se 
-mueven o se borra el canvas*/
-function dibujarConexiones(){
-  var nod = 0;
-  var l = figs.length; //Obtenemos la cantidad de objetos que hay en el canvas
-  var aux = l-1;
-  //Verificamos en la cola cuales tienen conexion
-  for(aux = l-1; aux >= 0; aux--){
-    if(figs[aux].arriba != -1){
-      mySel = aux;
-      mySel2 = mySel;
-      CoodenadasRedimSelect;
-      if(figs[aux].arribaRef != -1){
-        coorCuadritoAntesX = cuadrosSelectX[1];
-        coorCuadritoAntesY = cuadrosSelectY[1];
-        mySel = figs[aux].arriba;
-        CoodenadasRedimSelect;
-        var coordslol = "mySel1 "+mySel+" mySel2 "+mySel2+" en conexiones cuadX1 "
-        +coorCuadritoAntesX+" cuadY1 "+coorCuadritoAntesY;
-        document.getElementById("demo2").innerHTML = coordslol;
-        switch(figs[aux].arribaRef){
-          case 1:
-            dibujarFlecha("abajo");
-            break;
-          case 3:
-            dibujarFlecha("izquierda");
-            break;
-          case 4:
-            dibujarFlecha("derecha");
-            break;
-          case 6:
-            dibujarFlecha("arriba");
-            break;
-          default:
-            break;
-        }
-      }
-      if(figs[aux].derRef != -1){
-        
-      }
-      if(figs[aux].abajoRef != -1){
-        
-      }
-      if(figs[aux].izqaRef != -1){
-        
-      }
-
-    }
-    if(figs[aux].der != -1){
-      if(figs[aux].arribaRef != -1){
-
-      }
-      if(figs[aux].derRef != -1){
-        
-      }
-      if(figs[aux].abajoRef != -1){
-        
-      }
-      if(figs[aux].izqaRef != -1){
-        
-      }
-      
-    }
-    if(figs[aux].abajo != -1){
-      if(figs[aux].arribaRef != -1){
-
-      }
-      if(figs[aux].derRef != -1){
-        
-      }
-      if(figs[aux].abajoRef != -1){
-        
-      }
-      if(figs[aux].izqaRef != -1){
-        
-      }
-      
-    }
-    if(figs[aux].izq != -1){
-      if(figs[aux].arribaRef != -1){
-
-      }
-      if(figs[aux].derRef != -1){
-        
-      }
-      if(figs[aux].abajoRef != -1){
-        
-      }
-      if(figs[aux].izqaRef != -1){
-        
-      }
-      
-    }
-  }
-}
-
-/*var coordsxD = "nom: " + figs[l-1].nombre + " izq, " 
-        + figs[l-1].izq+ " der, " 
-        + figs[l-1].der+ " arr, " 
-        + figs[l-1].arriba+ " aba, " + figs[l-1].abajo
-        + " x " + figurasX[l-1]
-        + " y " + figurasY[l-1]
-        + " w " + figurasW[l-1]
-        + " h " + figurasH[l-1]
-        + " cuadrito1 "+ mySelCuadro
-        + " cuadrito2 "+ mySelCuadro2;
-        document.getElementById("demo2").innerHTML = coordsxD;*/
 
 /*Funcion para redibujar el canvas y pueda mover el objeto a donde queremos, 
 solo lo hace si la variable que permite el refrescado del canvas esta activa */
@@ -718,6 +1741,7 @@ function Dibujar(tipo){
   contexto.font = ""+tamañoFuente+"px Arial";
   switch(tipo){
     case "iniciar":
+    //Parte para la figura de inicio
       if(esNuevo){
         figs.push(new figurasCanvas("inicio",-1,-1,-1,-1,-1,-1,-1,-1, "Inicio"));
         figurasX.push(0);
@@ -751,6 +1775,7 @@ function Dibujar(tipo){
       
       break;
     case "final":
+    //Parte para la figura de fin
       if(esNuevo){
         figs.push(new figurasCanvas("final",-1,-1,-1,-1,-1,-1,-1,-1, "Fin"));
         figurasX.push(0);
@@ -784,6 +1809,7 @@ function Dibujar(tipo){
 
       break;
     case "EntDatos":
+    //Parte para la figura de entrada de datos
       if(esNuevo){
         var Datos = prompt("Introduce el texto", "Entrada de datos");
         figs.push(new figurasCanvas("EntDatos",-1,-1,-1,-1,-1,-1,-1,-1, ""+Datos));
@@ -836,6 +1862,7 @@ function Dibujar(tipo){
 
       break;
     case "SalDatos":
+    //Parte para la figura de salida de datos
       if(esNuevo){
         var Datos = prompt("Introduce el texto", "Salida de datos");
         figs.push(new figurasCanvas("SalDatos",-1,-1,-1,-1,-1,-1,-1,-1, ""+Datos));
@@ -880,6 +1907,7 @@ function Dibujar(tipo){
 
       break;
     case "Condicional":
+    //Parte para la figura de condicion
       if(esNuevo){
         var Datos = prompt("Introduce el texto", "Condicional");
         figs.push(new figurasCanvas("Condicional",-1,-1,-1,-1,-1,-1,-1,-1,""+Datos));
@@ -922,6 +1950,7 @@ function Dibujar(tipo){
 
       break;
     case "Variable":
+    //Parte para la figura de variables
       if(esNuevo){
         var Datos = prompt("Introduce el texto", "Variable");
         figs.push(new figurasCanvas("Variable",-1,-1,-1,-1,-1,-1,-1,-1, ""+Datos));
@@ -961,6 +1990,7 @@ function Dibujar(tipo){
       }
       break;
     case "Asignacion":
+    //Parte para la figura de asignacion
       if(esNuevo){
         var Datos = prompt("Introduce el texto", "Asignacion");
         figs.push(new figurasCanvas("Asignacion",-1,-1,-1,-1,-1,-1,-1,-1, ""+Datos));
@@ -996,45 +2026,61 @@ function Dibujar(tipo){
   }
 }
 
+/*Funcion que pone el texto dentro de la figura que manda a llamar
+esta funcion, tambien ajusta el texto dentro de los limites de la 
+figura.*/
 function PonerTexto(tipo,aux){
-  var largo;
+  var largo;  //Variable para saber el largo del texto en px
   switch(tipo){
     case "iniciar":
+      contexto.textAlign = "left";
+    //Para la figura iniciar no es necesario verificacion y se pone el texto
       contexto.fillText(""+figs[aux].texto, figurasX[aux]+figurasW[aux]*0.30,figurasY[aux]+figurasH[aux]*0.30+tamañoFuente);
       break;
     case "final":
+      contexto.textAlign = "left";
+    //Para la figura fin no es necesario verificacion y se pone el texto
       contexto.fillText(""+figs[aux].texto, figurasX[aux]+figurasW[aux]*0.37,figurasY[aux]+figurasH[aux]*0.30+tamañoFuente);
       break;
     case "EntDatos":
-      contexto.textAlign = "left";
-      largo = contexto.measureText(figs[aux].texto).width;
+      contexto.textAlign = "left";  //Ponemos el texto a la izquieda
+      largo = contexto.measureText(figs[aux].texto).width;  //Obtenemos el largo del texto
       if(largo<figurasW[aux]){
+        //Si el largo cabe en la figura lo ponemos
         contexto.fillText(""+figs[aux].texto,figurasX[aux]+figurasW[aux]*0.07,figurasY[aux]+figurasH[aux]*0.07+tamañoFuente);
       }
       else{
-        var seguro = false;
-        var cadena = figs[aux].texto.split(" ");
-        var cadPart = "";
-        var cadAnt = "";
-        var cont = 0;
-        var enter = 0;
+        //En caso de que no, vamos a recortarlo para meterlo
+        var seguro = false; //Variable para verificar el ciclo
+        var cadena = figs[aux].texto.split(" ");  //Dividimos el texto por espacios
+        var cadPart = ""; //Variable para formar la cadena nueva
+        var cadAnt = "";  //Variable para respaldar la cadena valida
+        var cont = 0; //Contador para movernos en las palabras
+        var enter = 0;  //Variable para simular el espacio en Y del Enter
+        //Mientras no lleguemos a la ultima palabra
         while(!seguro){
-          cadPart = cadAnt+cadena[cont]+" ";
+          cadPart = cadAnt+cadena[cont]+" ";  //Ponemos una palabra en la cadena
+          //La medimos y la comparamos con el largo de la figura
           if(contexto.measureText(cadPart).width<figurasW[aux]){
+            //Si es valida respaldamos la cadena
             cadAnt = cadPart;
-            cont++;
+            cont++; //Pasamos a la siguiente palabra
+            //Si llegamos a la ultima y es valida
             if(cont>=cadena.length){
+              //Ponemos la cadena en la figura
               contexto.fillText(cadAnt,figurasX[aux]+figurasW[aux]*0.07,figurasY[aux]+figurasH[aux]*0.07+tamañoFuente+enter);
-              seguro = true;
+              seguro = true;  //Salimos del ciclo
             }
           }
           else{
+            //Si no es valida porque rebasamos, ponemos la cadena de respaldo en la figura 
             contexto.fillText(cadAnt,figurasX[aux]+figurasW[aux]*0.07,figurasY[aux]+figurasH[aux]*0.07+tamañoFuente+enter);
-            cadPart = "";
-            cadAnt = "";
-            enter += tamañoFuente;
+            cadPart = ""; //Limpiamos la cadena
+            cadAnt = "";  //Limpiamos el respaldo
+            enter += tamañoFuente;  //Bajamos en Y con el tamaño de la fuente
           }
         }
+        //Se repite este algoritmo pero con coordenadas diferentes por la figura
       }
       break;
     case "SalDatos":
@@ -1172,6 +2218,7 @@ function PonerTexto(tipo,aux){
   }
 }
 
+/*Funcion que cambia el color del contorno de la figura seleccionada*/
 function CambiarColor(){
   if(esSeleccionado){
     var figColor = document.getElementById("cambioColor").value;
@@ -1179,6 +2226,7 @@ function CambiarColor(){
   }
 }
 
+/*Funcion que cambia el color del relleno de la figura seleccionada*/
 function CambiarRelleno(){
   if(esSeleccionado){
     var figColor = document.getElementById("cambioColor").value;
@@ -1186,6 +2234,7 @@ function CambiarRelleno(){
   }
 }
 
+/*Funcion que borra la figura seleccionada*/
 function BorrarFigura(){
   if(esSeleccionado){
     figs[mySel].nombre = "Borrado";
@@ -1196,6 +2245,7 @@ function BorrarFigura(){
   }
 }
 
+/*Funcion que cambia el texto de la figura seleccionada*/
 function CambiarTexto(){
   if(esSeleccionado){
     var Datos = prompt("Cambia el texto", "Texto nuevo");
@@ -1203,6 +2253,7 @@ function CambiarTexto(){
   }
 }
 
+/*Funcion que cambia el tamaño de la fuente del canvas*/
 function CambiarFuenteTam(){
   var Datos = prompt("Cambia el tamaño de la fuente", "0");
   tamañoFuente = parseInt(Datos);
